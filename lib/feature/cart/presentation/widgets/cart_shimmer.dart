@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_sedayu_app/core/component/space.dart';
+import 'package:sedayu_mart/core/component/space.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 import '../../../../core/style/color/colors_app.dart';
 

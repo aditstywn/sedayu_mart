@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_sedayu_app/core/component/space.dart';
+import 'package:sedayu_mart/core/component/space.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../style/color/colors_app.dart';

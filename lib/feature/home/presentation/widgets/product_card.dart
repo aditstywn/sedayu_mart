@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sedayu_app/core/extensions/build_context_ext.dart';
+import 'package:sedayu_mart/core/extensions/build_context_ext.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/component/space.dart';

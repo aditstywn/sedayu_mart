@@ -1,4 +1,4 @@
-# flutter_sedayu_app
+# sedayu_mart
 
 A new Flutter project.
 

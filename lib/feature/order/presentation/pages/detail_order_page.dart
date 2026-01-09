@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sedayu_app/core/component/space.dart';
+import 'package:sedayu_mart/core/component/space.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/component/buttons.dart';
 import '../../../../core/config/url.dart';

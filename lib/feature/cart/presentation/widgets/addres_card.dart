@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_sedayu_app/feature/cart/data/models/response/main_address_response_model.dart';
+import 'package:sedayu_mart/feature/cart/data/models/response/main_address_response_model.dart';
 
 import '../../../../core/style/color/colors_app.dart';
 import '../../../../core/style/thypograpy/sedayu_text_style.dart';
