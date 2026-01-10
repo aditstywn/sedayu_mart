@@ -62,7 +62,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
-                    'Toko Sedayu',
+                    'Smart Agro',
                     style: TextStyle(
                       fontSize: 32,
                       fontWeight: FontWeight.bold,

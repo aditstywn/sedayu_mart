@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
-import 'package:sedayu_mart/feature/profile/data/models/request/profile_request_model.dart';
-import 'package:sedayu_mart/feature/profile/data/models/request/shipping_address_request_model.dart';
+import 'package:smart_agro/feature/profile/data/models/request/profile_request_model.dart';
+import 'package:smart_agro/feature/profile/data/models/request/shipping_address_request_model.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../../core/config/api_driver.dart';

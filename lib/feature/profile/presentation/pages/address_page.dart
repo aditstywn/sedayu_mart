@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sedayu_mart/core/component/space.dart';
-import 'package:sedayu_mart/core/extensions/build_context_ext.dart';
+import 'package:smart_agro/core/component/space.dart';
+import 'package:smart_agro/core/extensions/build_context_ext.dart';
 
 import '../../../../core/component/buttons.dart';
 import '../../../../core/style/color/colors_app.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sedayu_mart/feature/cart/data/models/product_item.dart';
+import 'package:smart_agro/feature/cart/data/models/product_item.dart';
 
 class CartItem {
   final ProductItem product;

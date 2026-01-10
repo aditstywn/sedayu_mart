@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sedayu_mart/core/extensions/build_context_ext.dart';
-import 'package:sedayu_mart/feature/profile/presentation/pages/address_page.dart';
+import 'package:smart_agro/core/extensions/build_context_ext.dart';
+import 'package:smart_agro/feature/profile/presentation/pages/address_page.dart';
 
 import '../../../../core/style/color/colors_app.dart';
 import '../../../../core/style/thypograpy/sedayu_text_style.dart';

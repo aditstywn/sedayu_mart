@@ -108,7 +108,7 @@ class MyApp extends StatelessWidget {
           providers: [ChangeNotifierProvider(create: (_) => CartProvider())],
           child: MaterialApp(
             debugShowCheckedModeBanner: false,
-            title: 'Sedayu Mart',
+            title: 'Smart Agro',
             theme: SedayuTheme.lightTheme,
             themeMode: ThemeMode.system,
             home: SplashScreen(),

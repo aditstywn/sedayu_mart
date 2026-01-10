@@ -121,7 +121,7 @@ class _SplashScreenState extends State<SplashScreen>
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset(
-                      'assets/images/sedayu-mart.png',
+                      'assets/images/Splash-SmartAgro.png',
                       width: 300,
                       height: 300,
                     ),

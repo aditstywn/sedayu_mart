@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sedayu_mart/core/component/space.dart';
+import 'package:smart_agro/core/component/space.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/component/buttons.dart';
 import '../../../../core/config/url.dart';

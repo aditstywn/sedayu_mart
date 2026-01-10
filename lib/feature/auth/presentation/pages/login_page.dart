@@ -90,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
-                    'Toko Sedayu',
+                    'Smart Agro',
                     style: TextStyle(
                       fontSize: 32,
                       fontWeight: FontWeight.bold,

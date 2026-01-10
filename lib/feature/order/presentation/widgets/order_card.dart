@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:sedayu_mart/core/extensions/build_context_ext.dart';
+import 'package:smart_agro/core/extensions/build_context_ext.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/component/buttons.dart';
