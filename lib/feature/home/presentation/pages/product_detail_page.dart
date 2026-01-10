@@ -11,6 +11,7 @@ import '../../../cart/presentation/bloc/notif_cart/notif_cart_bloc.dart';
 import '../../../cart/presentation/pages/cart_page.dart';
 import '../../data/models/response/detail_product_response_model.dart';
 import '../bloc/detail_product/detail_product_bloc.dart';
+import '../widgets/detail_product_loading.dart';
 import '../widgets/modal_product.dart';
 
 class ProductDetailPage extends StatefulWidget {
@@ -49,7 +50,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         builder: (context, state) {
           switch (state) {
             case LoadingDetailProduct():
-              return const Center(child: CircularProgressIndicator());
+              return DetailProductLoading();
             case ErrorDetailProduct(:final message):
               return Center(
                 child: Text(
@@ -62,210 +63,219 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               );
             case DetailProductSuccess(:final detailProduct):
               final item = detailProduct.data?.produk;
-              return Stack(
-                children: [
-                  CustomScrollView(
-                    slivers: [
-                      _buildAppBar(gambarProduk: item?.gambarProduks),
-                      SliverToBoxAdapter(
-                        child: _buildImageThumbnails(
-                          gambarProduk: item?.gambarProduks,
+              return RefreshIndicator(
+                onRefresh: () async {
+                  context.read<DetailProductBloc>().add(
+                    DetailProductEvent.detailProduct(widget.idProduct ?? 0),
+                  );
+                },
+                child: Stack(
+                  children: [
+                    CustomScrollView(
+                      slivers: [
+                        _buildAppBar(gambarProduk: item?.gambarProduks),
+                        SliverToBoxAdapter(
+                          child: _buildImageThumbnails(
+                            gambarProduk: item?.gambarProduks,
+                          ),
                         ),
-                      ),
-                      SliverToBoxAdapter(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SpaceHeight(16),
-                            Container(
-                              width: double.infinity,
-                              margin: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                              ),
-                              padding: const EdgeInsets.all(16),
-                              decoration: BoxDecoration(
-                                color: ColorsApp.white,
-                                borderRadius: BorderRadius.circular(12),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withAlpha(10),
-                                    blurRadius: 8,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Varian Produk',
-                                    style: SedayuTextStyles.bodyLargeBold
-                                        .copyWith(
-                                          color: ColorsApp.textPrimary,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 15,
-                                        ),
-                                  ),
-                                  const SizedBox(height: 12),
-                                  Wrap(
-                                    spacing: 6,
-                                    runSpacing: 6,
-                                    children: [
-                                      ...item?.varians
-                                              ?.map(
-                                                (varian) => Container(
-                                                  padding: const EdgeInsets.all(
-                                                    8,
-                                                  ),
-                                                  decoration: BoxDecoration(
-                                                    color: ColorsApp
-                                                        .backgroundColor,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          6,
-                                                        ),
-                                                    border: Border.all(
-                                                      color:
-                                                          ColorsApp.borderColor,
-                                                      width: 1,
+                        SliverToBoxAdapter(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SpaceHeight(16),
+                              Container(
+                                width: double.infinity,
+                                margin: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                ),
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  color: ColorsApp.white,
+                                  borderRadius: BorderRadius.circular(12),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withAlpha(10),
+                                      blurRadius: 8,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Varian Produk',
+                                      style: SedayuTextStyles.bodyLargeBold
+                                          .copyWith(
+                                            color: ColorsApp.textPrimary,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 15,
+                                          ),
+                                    ),
+                                    const SizedBox(height: 12),
+                                    Wrap(
+                                      spacing: 6,
+                                      runSpacing: 6,
+                                      children: [
+                                        ...item?.varians
+                                                ?.map(
+                                                  (varian) => Container(
+                                                    padding:
+                                                        const EdgeInsets.all(8),
+                                                    decoration: BoxDecoration(
+                                                      color: ColorsApp
+                                                          .backgroundColor,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            6,
+                                                          ),
+                                                      border: Border.all(
+                                                        color: ColorsApp
+                                                            .borderColor,
+                                                        width: 1,
+                                                      ),
                                                     ),
-                                                  ),
-                                                  child: Row(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      SizedBox(
-                                                        width: 20,
-                                                        height: 20,
+                                                    child: Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        SizedBox(
+                                                          width: 20,
+                                                          height: 20,
 
-                                                        child: ClipRRect(
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                6,
-                                                              ),
-                                                          child: CachedNetworkImage(
-                                                            imageUrl:
-                                                                varian.gambar !=
-                                                                    null
-                                                                ? '${Url.baseUrl}/${varian.gambar}'
-                                                                : '',
-                                                            fit: BoxFit.cover,
-                                                            placeholder:
-                                                                (
-                                                                  context,
-                                                                  url,
-                                                                ) => Icon(
-                                                                  Icons
-                                                                      .inventory_2_outlined,
-                                                                  color: ColorsApp
-                                                                      .primary,
-                                                                  size: 20,
+                                                          child: ClipRRect(
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                  6,
                                                                 ),
-                                                            errorWidget:
-                                                                (
-                                                                  context,
-                                                                  url,
-                                                                  error,
-                                                                ) => Icon(
-                                                                  Icons
-                                                                      .inventory_2_outlined,
-                                                                  color: ColorsApp
-                                                                      .primary,
-                                                                  size: 20,
-                                                                ),
+                                                            child: CachedNetworkImage(
+                                                              imageUrl:
+                                                                  varian.gambar !=
+                                                                      null
+                                                                  ? '${Url.baseUrl}/${varian.gambar}'
+                                                                  : '',
+                                                              fit: BoxFit.cover,
+                                                              placeholder:
+                                                                  (
+                                                                    context,
+                                                                    url,
+                                                                  ) => Icon(
+                                                                    Icons
+                                                                        .inventory_2_outlined,
+                                                                    color: ColorsApp
+                                                                        .primary,
+                                                                    size: 20,
+                                                                  ),
+                                                              errorWidget:
+                                                                  (
+                                                                    context,
+                                                                    url,
+                                                                    error,
+                                                                  ) => Icon(
+                                                                    Icons
+                                                                        .inventory_2_outlined,
+                                                                    color: ColorsApp
+                                                                        .primary,
+                                                                    size: 20,
+                                                                  ),
+                                                            ),
                                                           ),
                                                         ),
-                                                      ),
-                                                      SpaceWidth(6),
-                                                      Text(
-                                                        varian.nama ?? 'Varian',
-                                                        style: SedayuTextStyles
-                                                            .bodyLargeMedium
-                                                            .copyWith(
-                                                              color: ColorsApp
-                                                                  .textPrimary,
-                                                              fontSize: 13,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                            ),
-                                                      ),
-                                                    ],
+                                                        SpaceWidth(6),
+                                                        Text(
+                                                          varian.nama ??
+                                                              'Varian',
+                                                          style: SedayuTextStyles
+                                                              .bodyLargeMedium
+                                                              .copyWith(
+                                                                color: ColorsApp
+                                                                    .textPrimary,
+                                                                fontSize: 13,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                              ),
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
-                                                ),
-                                              )
-                                              .toList() ??
-                                          [],
-                                    ],
-                                  ),
-                                ],
+                                                )
+                                                .toList() ??
+                                            [],
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                            SpaceHeight(16),
-                            Container(
-                              margin: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                              ),
-                              decoration: BoxDecoration(
-                                color: ColorsApp.white,
-                                borderRadius: BorderRadius.circular(12),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withAlpha(10),
-                                    blurRadius: 8,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              padding: const EdgeInsets.all(16),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    detailProduct.data?.produk?.nama ??
-                                        'Nama Produk',
-                                    style: SedayuTextStyles.headlineSmall
-                                        .copyWith(
-                                          color: ColorsApp.textPrimary,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20,
-                                        ),
-                                  ),
-                                  Divider(
-                                    color: ColorsApp.borderColor.withAlpha(51),
-                                  ),
+                              SpaceHeight(16),
+                              Container(
+                                margin: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: ColorsApp.white,
+                                  borderRadius: BorderRadius.circular(12),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withAlpha(10),
+                                      blurRadius: 8,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                padding: const EdgeInsets.all(16),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      detailProduct.data?.produk?.nama ??
+                                          'Nama Produk',
+                                      style: SedayuTextStyles.headlineSmall
+                                          .copyWith(
+                                            color: ColorsApp.textPrimary,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20,
+                                          ),
+                                    ),
+                                    Divider(
+                                      color: ColorsApp.borderColor.withAlpha(
+                                        51,
+                                      ),
+                                    ),
 
-                                  Text(
-                                    detailProduct.data?.produk?.deskripsi ??
-                                        '-',
-                                    style: SedayuTextStyles.bodyLargeMedium
-                                        .copyWith(
-                                          color: ColorsApp.textSecondary,
-                                          fontSize: 13,
-                                          height: 1.5,
-                                        ),
-                                    textAlign: TextAlign.justify,
-                                  ),
-                                ],
+                                    Text(
+                                      detailProduct.data?.produk?.deskripsi ??
+                                          '-',
+                                      style: SedayuTextStyles.bodyLargeMedium
+                                          .copyWith(
+                                            color: ColorsApp.textSecondary,
+                                            fontSize: 13,
+                                            height: 1.5,
+                                          ),
+                                      textAlign: TextAlign.justify,
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
 
-                            SpaceHeight(130),
-                          ],
+                              SpaceHeight(130),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  Positioned(
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    child: _buildBottomBar(
-                      productId: item?.id,
-                      variants: item?.varians,
+                      ],
                     ),
-                  ),
-                ],
+                    Positioned(
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      child: _buildBottomBar(
+                        productId: item?.id,
+                        variants: item?.varians,
+                      ),
+                    ),
+                  ],
+                ),
               );
             case _:
               return const SizedBox();

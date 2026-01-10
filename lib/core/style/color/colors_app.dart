@@ -8,7 +8,7 @@ class ColorsApp {
   static const Color accentGreen = Color(0xFF81C784); // Hijau aksen
 
   // Warna Background
-  static const Color backgroundColor = Color(0xFFF1F8E9); // Hijau sangat pudar
+  static const Color backgroundColor = Color(0xFFFAFAFA); // Hijau sangat pudar
   static const Color cardBackground = Colors.white;
 
   // Warna Teks

@@ -154,7 +154,14 @@ class _OrderPageState extends State<OrderPage>
               },
               builder: (context, state) {
                 if (filteredOrders.isEmpty) {
-                  return _buildEmptyState();
+                  return RefreshIndicator(
+                    onRefresh: () async {
+                      context.read<OrderBloc>().add(
+                        const OrderEvent.getOrder(),
+                      );
+                    },
+                    child: _buildEmptyState(),
+                  );
                 }
                 switch (state) {
                   case LoadingOrder():
@@ -169,12 +176,19 @@ class _OrderPageState extends State<OrderPage>
                       ),
                     );
                   case OrderSuccess():
-                    return ListView.builder(
-                      padding: const EdgeInsets.all(20),
-                      itemCount: filteredOrders.length,
-                      itemBuilder: (context, index) {
-                        return OrderCard(order: filteredOrders[index]);
+                    return RefreshIndicator(
+                      onRefresh: () async {
+                        context.read<OrderBloc>().add(
+                          const OrderEvent.getOrder(),
+                        );
                       },
+                      child: ListView.builder(
+                        padding: const EdgeInsets.all(20),
+                        itemCount: filteredOrders.length,
+                        itemBuilder: (context, index) {
+                          return OrderCard(order: filteredOrders[index]);
+                        },
+                      ),
                     );
                   case _:
                     return const SizedBox();
@@ -188,45 +202,49 @@ class _OrderPageState extends State<OrderPage>
   }
 
   Widget _buildEmptyState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: 120,
-            height: 120,
-            decoration: BoxDecoration(
-              color: ColorsApp.primary.withAlpha(25),
-              shape: BoxShape.circle,
+    return ListView(
+      padding: const EdgeInsets.all(20),
+      children: [
+        SizedBox(height: MediaQuery.of(context).size.height * 0.2),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 120,
+              height: 120,
+              decoration: BoxDecoration(
+                color: ColorsApp.primary.withAlpha(25),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.shopping_bag_outlined,
+                size: 60,
+                color: ColorsApp.primary,
+              ),
             ),
-            child: const Icon(
-              Icons.shopping_bag_outlined,
-              size: 60,
-              color: ColorsApp.primary,
+            const SizedBox(height: 24),
+            Text(
+              selectedStatus == 'Semua'
+                  ? 'Belum Ada Pesanan'
+                  : 'Belum Ada Pesanan $selectedStatus',
+              style: SedayuTextStyles.titleMedium.copyWith(
+                color: ColorsApp.textPrimary,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-          const SizedBox(height: 24),
-          Text(
-            selectedStatus == 'Semua'
-                ? 'Belum Ada Pesanan'
-                : 'Belum Ada Pesanan $selectedStatus',
-            style: SedayuTextStyles.titleMedium.copyWith(
-              color: ColorsApp.textPrimary,
-              fontWeight: FontWeight.bold,
+            const SizedBox(height: 8),
+            Text(
+              selectedStatus == 'Semua'
+                  ? 'Mulai belanja untuk membuat pesanan'
+                  : 'Tidak ada pesanan dengan status $selectedStatus',
+              style: SedayuTextStyles.bodyLargeMedium.copyWith(
+                color: ColorsApp.textSecondary,
+              ),
+              textAlign: TextAlign.center,
             ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            selectedStatus == 'Semua'
-                ? 'Mulai belanja untuk membuat pesanan'
-                : 'Tidak ada pesanan dengan status $selectedStatus',
-            style: SedayuTextStyles.bodyLargeMedium.copyWith(
-              color: ColorsApp.textSecondary,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
+          ],
+        ),
+      ],
     );
   }
 }
