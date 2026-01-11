@@ -1,4 +1,4 @@
-package com.rascode.pmmbemudinus
+package com.rascode.bemkmudinus
 
 import io.flutter.embedding.android.FlutterActivity
 
