@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../order/presentation/bloc/order/order_bloc.dart';
-import '../../data/models/request/buy_cart_request_model.dart';
-import '../../data/models/request/checkout_cart_request_model.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/component/buttons.dart';
@@ -11,13 +8,18 @@ import '../../../../core/component/upload_image.dart';
 import '../../../../core/extensions/build_context_ext.dart';
 import '../../../../core/style/color/colors_app.dart';
 import '../../../../core/style/thypograpy/sedayu_text_style.dart';
+import '../../../order/presentation/bloc/order/order_bloc.dart';
+import '../../../profile/presentation/bloc/profile/profile_bloc.dart';
+import '../../data/models/request/buy_cart_request_model.dart';
 import '../../data/models/request/buy_now_request_model.dart';
+import '../../data/models/request/checkout_cart_request_model.dart';
 import '../../data/models/request/checkout_request_model.dart';
 import '../bloc/checkout/checkout_bloc.dart';
 import '../bloc/notif_cart/notif_cart_bloc.dart';
 import '../bloc/order_sumary/order_sumary_bloc.dart';
 import '../bloc/submit_checkout/submit_checkout_bloc.dart';
 import '../widgets/addres_card.dart';
+import '../widgets/checkout_loading.dart';
 import '../widgets/order_sumary_card.dart';
 import '../widgets/order_sumary_cart_card.dart';
 import '../widgets/payment_method_card.dart';
@@ -71,66 +73,90 @@ class _CheckoutPageState extends State<CheckoutPage> {
         builder: (context, state) {
           switch (state) {
             case LoadingCheckout():
-              return const Center(child: CircularProgressIndicator());
+              return const CheckoutLoading();
             case ErrorCheckout(:final message):
               return Center(child: Text(message));
             case CheckoutSuccess(:final address, :final rekening):
               return Column(
                 children: [
                   Expanded(
-                    child: SingleChildScrollView(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          AddressCard(alamatUtama: address.data?.alamatUtama),
-                          const SizedBox(height: 12),
+                    child: RefreshIndicator(
+                      onRefresh: () async {
+                        context.read<CheckoutBloc>().add(
+                          CheckoutEvent.checkout(),
+                        );
+                        if (widget.isFromCart == true) {
+                          context.read<OrderSumaryBloc>().add(
+                            OrderSumaryEvent.buyCart(widget.buyCartRequest!),
+                          );
+                        } else {
+                          context.read<OrderSumaryBloc>().add(
+                            OrderSumaryEvent.buyNow(widget.buyNowRequest!),
+                          );
+                        }
+                      },
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            AddressCard(
+                              alamatUtama: address.data?.alamatUtama,
+                              isFromCart: widget.isFromCart,
+                              buyNowRequest: widget.buyNowRequest,
+                              buyCartRequest: widget.buyCartRequest,
+                            ),
 
-                          BlocBuilder<OrderSumaryBloc, OrderSumaryState>(
-                            builder: (context, state) {
-                              switch (state) {
-                                case LoadingOrderSumary():
-                                  return const Center(
-                                    child: CircularProgressIndicator(),
-                                  );
-                                case ErrorOrderSumary(:final message):
-                                  return Center(child: Text(message));
-                                case BuyNowSuccess(:final buyNow):
-                                  return OrderSumaryCard(
-                                    beliSekarang: buyNow.data?.beliSekarang,
-                                  );
-                                case BuyCartSuccess(:final buyCart):
-                                  return OrderSumaryCartCard(buyCart: buyCart);
-                                case _:
-                                  return const SizedBox();
-                              }
-                            },
-                          ),
-                          const SizedBox(height: 12),
+                            const SizedBox(height: 12),
 
-                          _buildNoteSection(),
-                          const SizedBox(height: 12),
+                            BlocBuilder<OrderSumaryBloc, OrderSumaryState>(
+                              builder: (context, state) {
+                                switch (state) {
+                                  case LoadingOrderSumary():
+                                    return const Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  case ErrorOrderSumary(:final message):
+                                    return Center(child: Text(message));
+                                  case BuyNowSuccess(:final buyNow):
+                                    return OrderSumaryCard(
+                                      beliSekarang: buyNow.data?.beliSekarang,
+                                    );
+                                  case BuyCartSuccess(:final buyCart):
+                                    return OrderSumaryCartCard(
+                                      buyCart: buyCart,
+                                    );
+                                  case _:
+                                    return const SizedBox();
+                                }
+                              },
+                            ),
+                            const SizedBox(height: 12),
 
-                          PaymentMethodCard(
-                            rekenings: rekening.data?.rekenings,
-                            onSelected: (selected) {
-                              setState(() {
-                                _selectedPaymentMethod = selected;
-                              });
-                            },
-                          ),
-                          const SizedBox(height: 12),
+                            _buildNoteSection(),
+                            const SizedBox(height: 12),
 
-                          UploadImage(
-                            title: 'Bukti Transfer',
-                            subtitle: 'Format: JPG, PNG (Max 5MB)',
-                            onImageSelected: (image) {
-                              setState(() {
-                                _imageFile = image;
-                              });
-                            },
-                          ),
-                        ],
+                            PaymentMethodCard(
+                              rekenings: rekening.data?.rekenings,
+                              onSelected: (selected) {
+                                setState(() {
+                                  _selectedPaymentMethod = selected;
+                                });
+                              },
+                            ),
+                            const SizedBox(height: 12),
+
+                            UploadImage(
+                              title: 'Bukti Transfer',
+                              subtitle: 'Format: JPG, PNG (Max 5MB)',
+                              onImageSelected: (image) {
+                                setState(() {
+                                  _imageFile = image;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -297,6 +323,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     const NotifCartEvent.getItemCart(),
                   );
                   context.read<OrderBloc>().add(const OrderEvent.getOrder());
+                  context.read<ProfileBloc>().add(const ProfileEvent.profile());
                   _showSuccessDialog();
                 case ErrorSubmitCheckout(:final message):
                   context.showAlertError(message: message);

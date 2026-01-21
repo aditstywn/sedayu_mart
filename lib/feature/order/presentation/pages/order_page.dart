@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smart_agro/feature/order/presentation/widgets/order_loading.dart';
 
 import '../../../../core/style/color/colors_app.dart';
 import '../../../../core/style/thypograpy/sedayu_text_style.dart';
@@ -102,7 +103,7 @@ class _OrderPageState extends State<OrderPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Pesanan Saya')),
+      appBar: AppBar(title: const Text('Pesanan ')),
       body: Column(
         children: [
           // TabBar
@@ -165,7 +166,7 @@ class _OrderPageState extends State<OrderPage>
                 }
                 switch (state) {
                   case LoadingOrder():
-                    return const Center(child: CircularProgressIndicator());
+                    return const OrderLoading();
                   case OrderError(:final message):
                     return Center(
                       child: Text(

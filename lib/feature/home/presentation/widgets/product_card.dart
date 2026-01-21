@@ -54,6 +54,7 @@ class _ProductCardState extends State<ProductCard> {
                 imageUrl: '${Url.baseUrl}/${widget.product.gambarUtama ?? ''}',
                 height: 120,
                 width: double.infinity,
+                fit: BoxFit.cover,
                 placeholder: (context, url) => Container(
                   height: 120,
                   decoration: BoxDecoration(

@@ -192,12 +192,14 @@ class _AddShippingAddressPageState extends State<AddShippingAddressPage> {
                             }
                           });
                         },
-                        onAddressChanged: (city, province, postalCode) {
-                          if (widget.initialAddress != null) return;
-                          _kabupatenController.text = city ?? '';
-                          _provinsiController.text = province ?? '';
-                          _kodePosController.text = postalCode ?? '';
-                        },
+                        onAddressChanged:
+                            (address, city, province, postalCode) {
+                              if (widget.initialAddress != null) return;
+                              _kabupatenController.text = city ?? '';
+                              _provinsiController.text = province ?? '';
+                              _kodePosController.text = postalCode ?? '';
+                              _alamatController.text = address;
+                            },
                         showZoomControls: true,
                       ),
 
@@ -375,6 +377,9 @@ class _AddShippingAddressPageState extends State<AddShippingAddressPage> {
                   }
                   return Button.filled(
                     onPressed: () {
+                      if (!_formKey.currentState!.validate()) {
+                        return;
+                      }
                       final address = ShippingAddressRequestModel(
                         id: widget.initialAddress?.id,
                         namaPenerima: _namaPenerimaController.text,
@@ -386,8 +391,6 @@ class _AddShippingAddressPageState extends State<AddShippingAddressPage> {
                         keterangan: _keteranganController.text,
                         utama: _isUtama,
                       );
-
-                      print(address.toJson());
 
                       if (widget.initialAddress != null) {
                         context.read<SubmitProfileBloc>().add(

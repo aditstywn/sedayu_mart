@@ -13,4 +13,7 @@ class SubmitProfileEvent with _$SubmitProfileEvent {
       _DeleteShippingAddress;
   const factory SubmitProfileEvent.updateProfile(ProfileRequestModel profile) =
       _UpdateProfile;
+  const factory SubmitProfileEvent.changePassword(
+    ChangePasswordRequestModel password,
+  ) = _ChangePassword;
 }

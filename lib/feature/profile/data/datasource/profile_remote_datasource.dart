@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 
 import '../../../../core/config/api_driver.dart';
 import '../../../../core/config/handle_response.dart';
+import '../models/request/change_password_request_model.dart';
 import '../models/response/profile_response_model.dart';
 import '../models/response/shipping_address_response_model.dart';
 import '../models/response/update_profile_response_model.dart';
@@ -147,6 +148,26 @@ class ProfileRemoteDatasource {
       );
     } catch (e) {
       return const Left('Gagal Menghapus Alamat Pengiriman');
+    }
+  }
+
+  Future<Either<String, String>> changePassword(
+    ChangePasswordRequestModel pw,
+  ) async {
+    try {
+      final response = await _driver.request(
+        method: ApiMethod.put,
+        url: 'api/mobile/profil/ganti-password',
+        body: pw.toJson(),
+      );
+
+      return handleResponse(
+        response: response,
+        fromJson: (String body) => 'Berhasil Mengganti Password',
+        errorMessage: 'Gagal Mengganti Password',
+      );
+    } catch (e) {
+      return const Left('Gagal Mengganti Password');
     }
   }
 }

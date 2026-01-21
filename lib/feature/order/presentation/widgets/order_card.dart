@@ -310,6 +310,7 @@ class _OrderCardState extends State<OrderCard> {
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: textColor, width: 1),
       ),
       child: Text(
         status,

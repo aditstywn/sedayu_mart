@@ -9,6 +9,7 @@ import '../../../../core/style/color/colors_app.dart';
 import '../../../../core/style/thypograpy/sedayu_text_style.dart';
 import '../../data/models/response/detail_order_response_model.dart';
 import '../bloc/detail_order/detail_order_bloc.dart';
+import '../widgets/detail_order_loading.dart';
 
 class DetailOrderPage extends StatefulWidget {
   final int? orderId;
@@ -46,58 +47,67 @@ class _DetailOrderPageState extends State<DetailOrderPage> {
         builder: (context, state) {
           switch (state) {
             case LoadingDetailOrder():
-              return const Center(child: CircularProgressIndicator());
+              return const DetailOrderLoading();
 
             case ErrorDetailOrder(:final message):
               return Center(child: Text('Error: $message'));
             case DetailOrderSuccess(:final detail):
-              return SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SpaceHeight(18),
+              return RefreshIndicator(
+                onRefresh: () async {
+                  context.read<DetailOrderBloc>().add(
+                    DetailOrderEvent.detailOrder(widget.orderId ?? 0),
+                  );
+                },
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SpaceHeight(18),
 
-                    _buildStatusHeader(status: detail.data?.status),
+                      _buildStatusHeader(status: detail.data?.status),
 
-                    const SizedBox(height: 12),
-
-                    _buildOrderInfo(
-                      orderNumber: detail.data?.nomorPesanan,
-                      date: detail.data?.pesananDibuatPada,
-                    ),
-
-                    const SizedBox(height: 12),
-
-                    if (detail.data?.status == 'Dikirim' ||
-                        detail.data?.status == 'Selesai')
-                      _buildShippingInfo(),
-
-                    if (detail.data?.status == 'Dikirim' ||
-                        detail.data?.status == 'Selesai')
                       const SizedBox(height: 12),
 
-                    _buildRecipientInfo(recipient: detail.data?.dataPenerima),
+                      _buildOrderInfo(
+                        orderNumber: detail.data?.nomorPesanan,
+                        date: detail.data?.pesananDibuatPada,
+                      ),
 
-                    const SizedBox(height: 12),
+                      const SizedBox(height: 12),
 
-                    _buildProductList(items: detail.data?.items),
+                      if (detail.data?.status == 'Dikirim' ||
+                          detail.data?.status == 'Selesai')
+                        _buildShippingInfo(),
 
-                    const SizedBox(height: 12),
+                      if (detail.data?.status == 'Dikirim' ||
+                          detail.data?.status == 'Selesai')
+                        const SizedBox(height: 12),
 
-                    _buildPaymentSummary(
-                      subtotal: detail.data?.subtotalProduk,
-                      shipping: detail.data?.ongkir,
-                      total: detail.data?.totalBayar,
-                    ),
-                    SpaceHeight(12),
-                    _buildNotes(notes: detail.data?.catatan),
+                      _buildRecipientInfo(recipient: detail.data?.dataPenerima),
 
-                    const SizedBox(height: 12),
+                      const SizedBox(height: 12),
 
-                    _buildPaymentProof(imageUrl: detail.data?.buktiPembayaran),
+                      _buildProductList(items: detail.data?.items),
 
-                    const SizedBox(height: 24),
-                  ],
+                      const SizedBox(height: 12),
+
+                      _buildPaymentSummary(
+                        subtotal: detail.data?.subtotalProduk,
+                        shipping: detail.data?.ongkir,
+                        total: detail.data?.totalBayar,
+                      ),
+                      SpaceHeight(12),
+                      _buildNotes(notes: detail.data?.catatan),
+
+                      const SizedBox(height: 12),
+
+                      _buildPaymentProof(
+                        imageUrl: detail.data?.buktiPembayaran,
+                      ),
+
+                      const SizedBox(height: 24),
+                    ],
+                  ),
                 ),
               );
             case _:

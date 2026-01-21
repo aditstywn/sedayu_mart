@@ -16,6 +16,8 @@ class SubmitProfileState with _$SubmitProfileState {
   const factory SubmitProfileState.deleteShippingAddressSuccess(
     String message,
   ) = DeleteShippingAddressSuccess;
+  const factory SubmitProfileState.changePasswordSuccess(String message) =
+      ChangePasswordSuccess;
   const factory SubmitProfileState.errorSubmitProfile(String message) =
       ErrorSubmitProfile;
 }

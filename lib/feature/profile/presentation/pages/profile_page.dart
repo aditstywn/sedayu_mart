@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smart_agro/feature/profile/presentation/widgets/profile_loading.dart';
 
 import '../../../../core/component/buttons.dart';
 import '../../../../core/component/space.dart';
@@ -24,7 +25,7 @@ class ProfilePage extends StatelessWidget {
         builder: (context, state) {
           switch (state) {
             case LoadingProfile():
-              return const Center(child: CircularProgressIndicator());
+              return const ProfileLoading();
             case ErrorProfile(:final message):
               return Center(child: Text('Error: $message'));
             case ProfileSuccess(:final profile):

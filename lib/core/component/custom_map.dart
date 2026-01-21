@@ -18,7 +18,12 @@ class CustomMap extends StatefulWidget {
   final bool showZoomControls;
   final bool? showAddress;
   final Function(LatLng)? onTap;
-  final Function(String? city, String? province, String? postalCode)?
+  final Function(
+    String address,
+    String? city,
+    String? province,
+    String? postalCode,
+  )?
   onAddressChanged;
 
   const CustomMap({
@@ -98,7 +103,7 @@ class _CustomMapState extends State<CustomMap> {
 
         // Panggil callback jika ada
         if (widget.onAddressChanged != null) {
-          widget.onAddressChanged!(city, province, postalCode);
+          widget.onAddressChanged!(address, city, province, postalCode);
         }
 
         setState(() {

@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import '../../../data/datasource/profile_remote_datasource.dart';
+import '../../../data/models/request/change_password_request_model.dart';
 import '../../../data/models/request/profile_request_model.dart';
 import '../../../data/models/request/shipping_address_request_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -49,6 +50,16 @@ class SubmitProfileBloc extends Bloc<SubmitProfileEvent, SubmitProfileState> {
       result.fold(
         (l) => emit(SubmitProfileState.errorSubmitProfile(l)),
         (r) => emit(SubmitProfileState.deleteShippingAddressSuccess(r)),
+      );
+    });
+    on<_ChangePassword>((event, emit) async {
+      emit(const SubmitProfileState.loadingSubmitProfile());
+      final result = await profileRemoteDatasource.changePassword(
+        event.password,
+      );
+      result.fold(
+        (l) => emit(SubmitProfileState.errorSubmitProfile(l)),
+        (r) => emit(SubmitProfileState.changePasswordSuccess(r)),
       );
     });
   }

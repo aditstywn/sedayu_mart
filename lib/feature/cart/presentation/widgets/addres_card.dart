@@ -1,12 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:smart_agro/feature/cart/data/models/response/main_address_response_model.dart';
+import '../../../../core/extensions/build_context_ext.dart';
+import '../../data/models/response/main_address_response_model.dart';
+import '../../../profile/presentation/pages/address_page.dart';
 
 import '../../../../core/style/color/colors_app.dart';
 import '../../../../core/style/thypograpy/sedayu_text_style.dart';
+import '../../data/models/request/buy_cart_request_model.dart';
+import '../../data/models/request/buy_now_request_model.dart';
 
 class AddressCard extends StatelessWidget {
   final AlamatUtama? alamatUtama;
-  const AddressCard({super.key, this.alamatUtama});
+  final bool? isFromCart;
+  final BuyNowRequestModel? buyNowRequest;
+  final BuyCartRequestModel? buyCartRequest;
+  const AddressCard({
+    super.key,
+    this.alamatUtama,
+    this.isFromCart,
+    this.buyNowRequest,
+    this.buyCartRequest,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -27,13 +40,38 @@ class AddressCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Alamat Pengiriman',
-            style: SedayuTextStyles.bodyLargeBold.copyWith(
-              color: ColorsApp.textPrimary,
-              fontWeight: FontWeight.bold,
-              fontSize: 15,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Alamat Pengiriman',
+                style: SedayuTextStyles.bodyLargeBold.copyWith(
+                  color: ColorsApp.textPrimary,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  context.push(
+                    AddressPage(
+                      checkout: true,
+                      isFromCart: isFromCart,
+                      buyNowRequest: buyNowRequest,
+                      buyCartRequest: buyCartRequest,
+                    ),
+                  );
+                },
+                child: Text(
+                  'Ubah',
+                  style: SedayuTextStyles.bodyLargeBold.copyWith(
+                    color: ColorsApp.textPrimary,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 12),
           Container(

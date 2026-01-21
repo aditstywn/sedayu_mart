@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smart_agro/core/component/space.dart';
 import 'package:smart_agro/core/extensions/build_context_ext.dart';
+import 'package:smart_agro/feature/profile/presentation/widgets/address_loading.dart';
 
 import '../../../../core/component/buttons.dart';
 import '../../../../core/style/color/colors_app.dart';
+import '../../../cart/data/models/request/buy_cart_request_model.dart';
+import '../../../cart/data/models/request/buy_now_request_model.dart';
+import '../../../cart/presentation/bloc/checkout/checkout_bloc.dart';
+import '../../../cart/presentation/bloc/order_sumary/order_sumary_bloc.dart';
 import '../../data/models/request/shipping_address_request_model.dart';
 import '../../data/models/response/shipping_address_response_model.dart';
 import '../bloc/section/section_bloc.dart';
@@ -12,7 +17,17 @@ import '../bloc/submit_profile/submit_profile_bloc.dart';
 import 'add_shipping_address_page.dart';
 
 class AddressPage extends StatefulWidget {
-  const AddressPage({super.key});
+  final bool? checkout;
+  final bool? isFromCart;
+  final BuyNowRequestModel? buyNowRequest;
+  final BuyCartRequestModel? buyCartRequest;
+  const AddressPage({
+    super.key,
+    this.checkout,
+    this.isFromCart,
+    this.buyNowRequest,
+    this.buyCartRequest,
+  });
 
   @override
   State<AddressPage> createState() => _AddressPageState();
@@ -36,7 +51,21 @@ class _AddressPageState extends State<AddressPage> {
             case ErrorSubmitProfile(:final message):
               context.showAlertError(message: message);
             case UpdateShippingAddressSuccess(:final message):
+              context.read<CheckoutBloc>().add(CheckoutEvent.checkout());
+              if (widget.checkout == true) {
+                context.read<CheckoutBloc>().add(CheckoutEvent.checkout());
+                if (widget.isFromCart == true) {
+                  context.read<OrderSumaryBloc>().add(
+                    OrderSumaryEvent.buyCart(widget.buyCartRequest!),
+                  );
+                } else {
+                  context.read<OrderSumaryBloc>().add(
+                    OrderSumaryEvent.buyNow(widget.buyNowRequest!),
+                  );
+                }
+              }
               context.showAlertSuccess(message: message);
+
             case DeleteShippingAddressSuccess(:final message):
               context.pop();
               context.showAlertSuccess(message: message);
@@ -56,7 +85,7 @@ class _AddressPageState extends State<AddressPage> {
           builder: (context, state) {
             switch (state) {
               case LoadingSection():
-                return const Center(child: CircularProgressIndicator());
+                return AddressLoading();
               case ErrorSection(:final message):
                 return Center(child: Text('Error: $message'));
               case ShippingAddressSuccess(:final address):
@@ -64,6 +93,7 @@ class _AddressPageState extends State<AddressPage> {
                     address.data?.alamatPengiriman?.isEmpty == true) {
                   return _buildEmptyState();
                 }
+
                 return RefreshIndicator(
                   onRefresh: () async {
                     context.read<SectionBloc>().add(
@@ -271,10 +301,8 @@ class _AddressPageState extends State<AddressPage> {
             ),
           ),
 
-          // Divider
           const Divider(height: 1, color: ColorsApp.borderColor),
 
-          // Action buttons
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [

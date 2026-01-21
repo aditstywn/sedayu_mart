@@ -5,6 +5,7 @@ import 'package:smart_agro/feature/profile/presentation/pages/address_page.dart'
 import '../../../../core/style/color/colors_app.dart';
 import '../../../../core/style/thypograpy/sedayu_text_style.dart';
 import '../../data/models/response/profile_response_model.dart';
+import '../pages/change_password_page.dart';
 import '../pages/update_profile.dart';
 
 class MenuSectionCard extends StatelessWidget {
@@ -49,7 +50,9 @@ class MenuSectionCard extends StatelessWidget {
             icon: Icons.lock,
             title: 'Ganti Password',
             subtitle: 'Perbarui password Anda',
-            onTap: () {},
+            onTap: () {
+              context.push(const ChangePasswordPage());
+            },
           ),
 
           _buildDivider(),

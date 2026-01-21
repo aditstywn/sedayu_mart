@@ -55,7 +55,7 @@ extension SubmitProfileEventPatterns on SubmitProfileEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Started value)?  started,TResult Function( _AddShippingAddress value)?  addShippingAddress,TResult Function( _UpdateShippingAddress value)?  updateShippingAddress,TResult Function( _DeleteShippingAddress value)?  deleteShippingAddress,TResult Function( _UpdateProfile value)?  updateProfile,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Started value)?  started,TResult Function( _AddShippingAddress value)?  addShippingAddress,TResult Function( _UpdateShippingAddress value)?  updateShippingAddress,TResult Function( _DeleteShippingAddress value)?  deleteShippingAddress,TResult Function( _UpdateProfile value)?  updateProfile,TResult Function( _ChangePassword value)?  changePassword,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case _Started() when started != null:
@@ -63,7 +63,8 @@ return started(_that);case _AddShippingAddress() when addShippingAddress != null
 return addShippingAddress(_that);case _UpdateShippingAddress() when updateShippingAddress != null:
 return updateShippingAddress(_that);case _DeleteShippingAddress() when deleteShippingAddress != null:
 return deleteShippingAddress(_that);case _UpdateProfile() when updateProfile != null:
-return updateProfile(_that);case _:
+return updateProfile(_that);case _ChangePassword() when changePassword != null:
+return changePassword(_that);case _:
   return orElse();
 
 }
@@ -81,7 +82,7 @@ return updateProfile(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Started value)  started,required TResult Function( _AddShippingAddress value)  addShippingAddress,required TResult Function( _UpdateShippingAddress value)  updateShippingAddress,required TResult Function( _DeleteShippingAddress value)  deleteShippingAddress,required TResult Function( _UpdateProfile value)  updateProfile,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Started value)  started,required TResult Function( _AddShippingAddress value)  addShippingAddress,required TResult Function( _UpdateShippingAddress value)  updateShippingAddress,required TResult Function( _DeleteShippingAddress value)  deleteShippingAddress,required TResult Function( _UpdateProfile value)  updateProfile,required TResult Function( _ChangePassword value)  changePassword,}){
 final _that = this;
 switch (_that) {
 case _Started():
@@ -89,7 +90,8 @@ return started(_that);case _AddShippingAddress():
 return addShippingAddress(_that);case _UpdateShippingAddress():
 return updateShippingAddress(_that);case _DeleteShippingAddress():
 return deleteShippingAddress(_that);case _UpdateProfile():
-return updateProfile(_that);case _:
+return updateProfile(_that);case _ChangePassword():
+return changePassword(_that);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -106,7 +108,7 @@ return updateProfile(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Started value)?  started,TResult? Function( _AddShippingAddress value)?  addShippingAddress,TResult? Function( _UpdateShippingAddress value)?  updateShippingAddress,TResult? Function( _DeleteShippingAddress value)?  deleteShippingAddress,TResult? Function( _UpdateProfile value)?  updateProfile,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Started value)?  started,TResult? Function( _AddShippingAddress value)?  addShippingAddress,TResult? Function( _UpdateShippingAddress value)?  updateShippingAddress,TResult? Function( _DeleteShippingAddress value)?  deleteShippingAddress,TResult? Function( _UpdateProfile value)?  updateProfile,TResult? Function( _ChangePassword value)?  changePassword,}){
 final _that = this;
 switch (_that) {
 case _Started() when started != null:
@@ -114,7 +116,8 @@ return started(_that);case _AddShippingAddress() when addShippingAddress != null
 return addShippingAddress(_that);case _UpdateShippingAddress() when updateShippingAddress != null:
 return updateShippingAddress(_that);case _DeleteShippingAddress() when deleteShippingAddress != null:
 return deleteShippingAddress(_that);case _UpdateProfile() when updateProfile != null:
-return updateProfile(_that);case _:
+return updateProfile(_that);case _ChangePassword() when changePassword != null:
+return changePassword(_that);case _:
   return null;
 
 }
@@ -131,14 +134,15 @@ return updateProfile(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  started,TResult Function( ShippingAddressRequestModel address)?  addShippingAddress,TResult Function( ShippingAddressRequestModel address)?  updateShippingAddress,TResult Function( int id)?  deleteShippingAddress,TResult Function( ProfileRequestModel profile)?  updateProfile,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  started,TResult Function( ShippingAddressRequestModel address)?  addShippingAddress,TResult Function( ShippingAddressRequestModel address)?  updateShippingAddress,TResult Function( int id)?  deleteShippingAddress,TResult Function( ProfileRequestModel profile)?  updateProfile,TResult Function( ChangePasswordRequestModel password)?  changePassword,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Started() when started != null:
 return started();case _AddShippingAddress() when addShippingAddress != null:
 return addShippingAddress(_that.address);case _UpdateShippingAddress() when updateShippingAddress != null:
 return updateShippingAddress(_that.address);case _DeleteShippingAddress() when deleteShippingAddress != null:
 return deleteShippingAddress(_that.id);case _UpdateProfile() when updateProfile != null:
-return updateProfile(_that.profile);case _:
+return updateProfile(_that.profile);case _ChangePassword() when changePassword != null:
+return changePassword(_that.password);case _:
   return orElse();
 
 }
@@ -156,14 +160,15 @@ return updateProfile(_that.profile);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  started,required TResult Function( ShippingAddressRequestModel address)  addShippingAddress,required TResult Function( ShippingAddressRequestModel address)  updateShippingAddress,required TResult Function( int id)  deleteShippingAddress,required TResult Function( ProfileRequestModel profile)  updateProfile,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  started,required TResult Function( ShippingAddressRequestModel address)  addShippingAddress,required TResult Function( ShippingAddressRequestModel address)  updateShippingAddress,required TResult Function( int id)  deleteShippingAddress,required TResult Function( ProfileRequestModel profile)  updateProfile,required TResult Function( ChangePasswordRequestModel password)  changePassword,}) {final _that = this;
 switch (_that) {
 case _Started():
 return started();case _AddShippingAddress():
 return addShippingAddress(_that.address);case _UpdateShippingAddress():
 return updateShippingAddress(_that.address);case _DeleteShippingAddress():
 return deleteShippingAddress(_that.id);case _UpdateProfile():
-return updateProfile(_that.profile);case _:
+return updateProfile(_that.profile);case _ChangePassword():
+return changePassword(_that.password);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -180,14 +185,15 @@ return updateProfile(_that.profile);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  started,TResult? Function( ShippingAddressRequestModel address)?  addShippingAddress,TResult? Function( ShippingAddressRequestModel address)?  updateShippingAddress,TResult? Function( int id)?  deleteShippingAddress,TResult? Function( ProfileRequestModel profile)?  updateProfile,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  started,TResult? Function( ShippingAddressRequestModel address)?  addShippingAddress,TResult? Function( ShippingAddressRequestModel address)?  updateShippingAddress,TResult? Function( int id)?  deleteShippingAddress,TResult? Function( ProfileRequestModel profile)?  updateProfile,TResult? Function( ChangePasswordRequestModel password)?  changePassword,}) {final _that = this;
 switch (_that) {
 case _Started() when started != null:
 return started();case _AddShippingAddress() when addShippingAddress != null:
 return addShippingAddress(_that.address);case _UpdateShippingAddress() when updateShippingAddress != null:
 return updateShippingAddress(_that.address);case _DeleteShippingAddress() when deleteShippingAddress != null:
 return deleteShippingAddress(_that.id);case _UpdateProfile() when updateProfile != null:
-return updateProfile(_that.profile);case _:
+return updateProfile(_that.profile);case _ChangePassword() when changePassword != null:
+return changePassword(_that.password);case _:
   return null;
 
 }
@@ -492,6 +498,72 @@ as ProfileRequestModel,
 }
 
 /// @nodoc
+
+
+class _ChangePassword implements SubmitProfileEvent {
+  const _ChangePassword(this.password);
+  
+
+ final  ChangePasswordRequestModel password;
+
+/// Create a copy of SubmitProfileEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$ChangePasswordCopyWith<_ChangePassword> get copyWith => __$ChangePasswordCopyWithImpl<_ChangePassword>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ChangePassword&&(identical(other.password, password) || other.password == password));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,password);
+
+@override
+String toString() {
+  return 'SubmitProfileEvent.changePassword(password: $password)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$ChangePasswordCopyWith<$Res> implements $SubmitProfileEventCopyWith<$Res> {
+  factory _$ChangePasswordCopyWith(_ChangePassword value, $Res Function(_ChangePassword) _then) = __$ChangePasswordCopyWithImpl;
+@useResult
+$Res call({
+ ChangePasswordRequestModel password
+});
+
+
+
+
+}
+/// @nodoc
+class __$ChangePasswordCopyWithImpl<$Res>
+    implements _$ChangePasswordCopyWith<$Res> {
+  __$ChangePasswordCopyWithImpl(this._self, this._then);
+
+  final _ChangePassword _self;
+  final $Res Function(_ChangePassword) _then;
+
+/// Create a copy of SubmitProfileEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? password = null,}) {
+  return _then(_ChangePassword(
+null == password ? _self.password : password // ignore: cast_nullable_to_non_nullable
+as ChangePasswordRequestModel,
+  ));
+}
+
+
+}
+
+/// @nodoc
 mixin _$SubmitProfileState {
 
 
@@ -535,7 +607,7 @@ extension SubmitProfileStatePatterns on SubmitProfileState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( Initial value)?  initial,TResult Function( LoadingSubmitProfile value)?  loadingSubmitProfile,TResult Function( AddShippingAddressSuccess value)?  addShippingAddressSuccess,TResult Function( UpdateProfileSuccess value)?  updateProfileSuccess,TResult Function( UpdateShippingAddressSuccess value)?  updateShippingAddressSuccess,TResult Function( DeleteShippingAddressSuccess value)?  deleteShippingAddressSuccess,TResult Function( ErrorSubmitProfile value)?  errorSubmitProfile,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( Initial value)?  initial,TResult Function( LoadingSubmitProfile value)?  loadingSubmitProfile,TResult Function( AddShippingAddressSuccess value)?  addShippingAddressSuccess,TResult Function( UpdateProfileSuccess value)?  updateProfileSuccess,TResult Function( UpdateShippingAddressSuccess value)?  updateShippingAddressSuccess,TResult Function( DeleteShippingAddressSuccess value)?  deleteShippingAddressSuccess,TResult Function( ChangePasswordSuccess value)?  changePasswordSuccess,TResult Function( ErrorSubmitProfile value)?  errorSubmitProfile,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case Initial() when initial != null:
@@ -544,7 +616,8 @@ return loadingSubmitProfile(_that);case AddShippingAddressSuccess() when addShip
 return addShippingAddressSuccess(_that);case UpdateProfileSuccess() when updateProfileSuccess != null:
 return updateProfileSuccess(_that);case UpdateShippingAddressSuccess() when updateShippingAddressSuccess != null:
 return updateShippingAddressSuccess(_that);case DeleteShippingAddressSuccess() when deleteShippingAddressSuccess != null:
-return deleteShippingAddressSuccess(_that);case ErrorSubmitProfile() when errorSubmitProfile != null:
+return deleteShippingAddressSuccess(_that);case ChangePasswordSuccess() when changePasswordSuccess != null:
+return changePasswordSuccess(_that);case ErrorSubmitProfile() when errorSubmitProfile != null:
 return errorSubmitProfile(_that);case _:
   return orElse();
 
@@ -563,7 +636,7 @@ return errorSubmitProfile(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( Initial value)  initial,required TResult Function( LoadingSubmitProfile value)  loadingSubmitProfile,required TResult Function( AddShippingAddressSuccess value)  addShippingAddressSuccess,required TResult Function( UpdateProfileSuccess value)  updateProfileSuccess,required TResult Function( UpdateShippingAddressSuccess value)  updateShippingAddressSuccess,required TResult Function( DeleteShippingAddressSuccess value)  deleteShippingAddressSuccess,required TResult Function( ErrorSubmitProfile value)  errorSubmitProfile,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( Initial value)  initial,required TResult Function( LoadingSubmitProfile value)  loadingSubmitProfile,required TResult Function( AddShippingAddressSuccess value)  addShippingAddressSuccess,required TResult Function( UpdateProfileSuccess value)  updateProfileSuccess,required TResult Function( UpdateShippingAddressSuccess value)  updateShippingAddressSuccess,required TResult Function( DeleteShippingAddressSuccess value)  deleteShippingAddressSuccess,required TResult Function( ChangePasswordSuccess value)  changePasswordSuccess,required TResult Function( ErrorSubmitProfile value)  errorSubmitProfile,}){
 final _that = this;
 switch (_that) {
 case Initial():
@@ -572,7 +645,8 @@ return loadingSubmitProfile(_that);case AddShippingAddressSuccess():
 return addShippingAddressSuccess(_that);case UpdateProfileSuccess():
 return updateProfileSuccess(_that);case UpdateShippingAddressSuccess():
 return updateShippingAddressSuccess(_that);case DeleteShippingAddressSuccess():
-return deleteShippingAddressSuccess(_that);case ErrorSubmitProfile():
+return deleteShippingAddressSuccess(_that);case ChangePasswordSuccess():
+return changePasswordSuccess(_that);case ErrorSubmitProfile():
 return errorSubmitProfile(_that);case _:
   throw StateError('Unexpected subclass');
 
@@ -590,7 +664,7 @@ return errorSubmitProfile(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( Initial value)?  initial,TResult? Function( LoadingSubmitProfile value)?  loadingSubmitProfile,TResult? Function( AddShippingAddressSuccess value)?  addShippingAddressSuccess,TResult? Function( UpdateProfileSuccess value)?  updateProfileSuccess,TResult? Function( UpdateShippingAddressSuccess value)?  updateShippingAddressSuccess,TResult? Function( DeleteShippingAddressSuccess value)?  deleteShippingAddressSuccess,TResult? Function( ErrorSubmitProfile value)?  errorSubmitProfile,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( Initial value)?  initial,TResult? Function( LoadingSubmitProfile value)?  loadingSubmitProfile,TResult? Function( AddShippingAddressSuccess value)?  addShippingAddressSuccess,TResult? Function( UpdateProfileSuccess value)?  updateProfileSuccess,TResult? Function( UpdateShippingAddressSuccess value)?  updateShippingAddressSuccess,TResult? Function( DeleteShippingAddressSuccess value)?  deleteShippingAddressSuccess,TResult? Function( ChangePasswordSuccess value)?  changePasswordSuccess,TResult? Function( ErrorSubmitProfile value)?  errorSubmitProfile,}){
 final _that = this;
 switch (_that) {
 case Initial() when initial != null:
@@ -599,7 +673,8 @@ return loadingSubmitProfile(_that);case AddShippingAddressSuccess() when addShip
 return addShippingAddressSuccess(_that);case UpdateProfileSuccess() when updateProfileSuccess != null:
 return updateProfileSuccess(_that);case UpdateShippingAddressSuccess() when updateShippingAddressSuccess != null:
 return updateShippingAddressSuccess(_that);case DeleteShippingAddressSuccess() when deleteShippingAddressSuccess != null:
-return deleteShippingAddressSuccess(_that);case ErrorSubmitProfile() when errorSubmitProfile != null:
+return deleteShippingAddressSuccess(_that);case ChangePasswordSuccess() when changePasswordSuccess != null:
+return changePasswordSuccess(_that);case ErrorSubmitProfile() when errorSubmitProfile != null:
 return errorSubmitProfile(_that);case _:
   return null;
 
@@ -617,7 +692,7 @@ return errorSubmitProfile(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loadingSubmitProfile,TResult Function( String message)?  addShippingAddressSuccess,TResult Function( UpdateProfileResponseModel data)?  updateProfileSuccess,TResult Function( String message)?  updateShippingAddressSuccess,TResult Function( String message)?  deleteShippingAddressSuccess,TResult Function( String message)?  errorSubmitProfile,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loadingSubmitProfile,TResult Function( String message)?  addShippingAddressSuccess,TResult Function( UpdateProfileResponseModel data)?  updateProfileSuccess,TResult Function( String message)?  updateShippingAddressSuccess,TResult Function( String message)?  deleteShippingAddressSuccess,TResult Function( String message)?  changePasswordSuccess,TResult Function( String message)?  errorSubmitProfile,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case Initial() when initial != null:
 return initial();case LoadingSubmitProfile() when loadingSubmitProfile != null:
@@ -625,7 +700,8 @@ return loadingSubmitProfile();case AddShippingAddressSuccess() when addShippingA
 return addShippingAddressSuccess(_that.message);case UpdateProfileSuccess() when updateProfileSuccess != null:
 return updateProfileSuccess(_that.data);case UpdateShippingAddressSuccess() when updateShippingAddressSuccess != null:
 return updateShippingAddressSuccess(_that.message);case DeleteShippingAddressSuccess() when deleteShippingAddressSuccess != null:
-return deleteShippingAddressSuccess(_that.message);case ErrorSubmitProfile() when errorSubmitProfile != null:
+return deleteShippingAddressSuccess(_that.message);case ChangePasswordSuccess() when changePasswordSuccess != null:
+return changePasswordSuccess(_that.message);case ErrorSubmitProfile() when errorSubmitProfile != null:
 return errorSubmitProfile(_that.message);case _:
   return orElse();
 
@@ -644,7 +720,7 @@ return errorSubmitProfile(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loadingSubmitProfile,required TResult Function( String message)  addShippingAddressSuccess,required TResult Function( UpdateProfileResponseModel data)  updateProfileSuccess,required TResult Function( String message)  updateShippingAddressSuccess,required TResult Function( String message)  deleteShippingAddressSuccess,required TResult Function( String message)  errorSubmitProfile,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loadingSubmitProfile,required TResult Function( String message)  addShippingAddressSuccess,required TResult Function( UpdateProfileResponseModel data)  updateProfileSuccess,required TResult Function( String message)  updateShippingAddressSuccess,required TResult Function( String message)  deleteShippingAddressSuccess,required TResult Function( String message)  changePasswordSuccess,required TResult Function( String message)  errorSubmitProfile,}) {final _that = this;
 switch (_that) {
 case Initial():
 return initial();case LoadingSubmitProfile():
@@ -652,7 +728,8 @@ return loadingSubmitProfile();case AddShippingAddressSuccess():
 return addShippingAddressSuccess(_that.message);case UpdateProfileSuccess():
 return updateProfileSuccess(_that.data);case UpdateShippingAddressSuccess():
 return updateShippingAddressSuccess(_that.message);case DeleteShippingAddressSuccess():
-return deleteShippingAddressSuccess(_that.message);case ErrorSubmitProfile():
+return deleteShippingAddressSuccess(_that.message);case ChangePasswordSuccess():
+return changePasswordSuccess(_that.message);case ErrorSubmitProfile():
 return errorSubmitProfile(_that.message);case _:
   throw StateError('Unexpected subclass');
 
@@ -670,7 +747,7 @@ return errorSubmitProfile(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loadingSubmitProfile,TResult? Function( String message)?  addShippingAddressSuccess,TResult? Function( UpdateProfileResponseModel data)?  updateProfileSuccess,TResult? Function( String message)?  updateShippingAddressSuccess,TResult? Function( String message)?  deleteShippingAddressSuccess,TResult? Function( String message)?  errorSubmitProfile,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loadingSubmitProfile,TResult? Function( String message)?  addShippingAddressSuccess,TResult? Function( UpdateProfileResponseModel data)?  updateProfileSuccess,TResult? Function( String message)?  updateShippingAddressSuccess,TResult? Function( String message)?  deleteShippingAddressSuccess,TResult? Function( String message)?  changePasswordSuccess,TResult? Function( String message)?  errorSubmitProfile,}) {final _that = this;
 switch (_that) {
 case Initial() when initial != null:
 return initial();case LoadingSubmitProfile() when loadingSubmitProfile != null:
@@ -678,7 +755,8 @@ return loadingSubmitProfile();case AddShippingAddressSuccess() when addShippingA
 return addShippingAddressSuccess(_that.message);case UpdateProfileSuccess() when updateProfileSuccess != null:
 return updateProfileSuccess(_that.data);case UpdateShippingAddressSuccess() when updateShippingAddressSuccess != null:
 return updateShippingAddressSuccess(_that.message);case DeleteShippingAddressSuccess() when deleteShippingAddressSuccess != null:
-return deleteShippingAddressSuccess(_that.message);case ErrorSubmitProfile() when errorSubmitProfile != null:
+return deleteShippingAddressSuccess(_that.message);case ChangePasswordSuccess() when changePasswordSuccess != null:
+return changePasswordSuccess(_that.message);case ErrorSubmitProfile() when errorSubmitProfile != null:
 return errorSubmitProfile(_that.message);case _:
   return null;
 
@@ -1007,6 +1085,72 @@ class _$DeleteShippingAddressSuccessCopyWithImpl<$Res>
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') $Res call({Object? message = null,}) {
   return _then(DeleteShippingAddressSuccess(
+null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class ChangePasswordSuccess implements SubmitProfileState {
+  const ChangePasswordSuccess(this.message);
+  
+
+ final  String message;
+
+/// Create a copy of SubmitProfileState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ChangePasswordSuccessCopyWith<ChangePasswordSuccess> get copyWith => _$ChangePasswordSuccessCopyWithImpl<ChangePasswordSuccess>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ChangePasswordSuccess&&(identical(other.message, message) || other.message == message));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,message);
+
+@override
+String toString() {
+  return 'SubmitProfileState.changePasswordSuccess(message: $message)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $ChangePasswordSuccessCopyWith<$Res> implements $SubmitProfileStateCopyWith<$Res> {
+  factory $ChangePasswordSuccessCopyWith(ChangePasswordSuccess value, $Res Function(ChangePasswordSuccess) _then) = _$ChangePasswordSuccessCopyWithImpl;
+@useResult
+$Res call({
+ String message
+});
+
+
+
+
+}
+/// @nodoc
+class _$ChangePasswordSuccessCopyWithImpl<$Res>
+    implements $ChangePasswordSuccessCopyWith<$Res> {
+  _$ChangePasswordSuccessCopyWithImpl(this._self, this._then);
+
+  final ChangePasswordSuccess _self;
+  final $Res Function(ChangePasswordSuccess) _then;
+
+/// Create a copy of SubmitProfileState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? message = null,}) {
+  return _then(ChangePasswordSuccess(
 null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
 as String,
   ));
