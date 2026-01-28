@@ -22,6 +22,7 @@ import 'feature/order/data/datasource/order_remote_datasource.dart';
 import 'feature/order/presentation/bloc/detail_order/detail_order_bloc.dart';
 import 'feature/order/presentation/bloc/order/order_bloc.dart';
 import 'feature/profile/data/datasource/profile_remote_datasource.dart';
+import 'feature/profile/presentation/bloc/city/city_bloc.dart';
 import 'feature/profile/presentation/bloc/profile/profile_bloc.dart';
 import 'feature/profile/presentation/bloc/section/section_bloc.dart';
 import 'feature/profile/presentation/bloc/submit_profile/submit_profile_bloc.dart';
@@ -102,6 +103,10 @@ class MyApp extends StatelessWidget {
           BlocProvider(
             create: (context) =>
                 SubmitProfileBloc(context.read<ProfileRemoteDatasource>()),
+          ),
+          BlocProvider(
+            create: (context) =>
+                CityBloc(context.read<ProfileRemoteDatasource>()),
           ),
         ],
         child: MultiProvider(

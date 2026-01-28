@@ -133,11 +133,11 @@ class _CustomMapState extends State<CustomMap> {
     List<String> addressParts = [];
 
     // Tambah nama jalan
-    if (place.street?.isNotEmpty == true) {
-      addressParts.add(place.street!);
-    } else if (place.name?.isNotEmpty == true) {
-      addressParts.add(place.name!);
-    }
+    // if (place.street?.isNotEmpty == true) {
+    //   addressParts.add(place.street!);
+    // } else if (place.name?.isNotEmpty == true) {
+    //   addressParts.add(place.name!);
+    // }
 
     // Tambah sub lokalitas
     if (place.subLocality?.isNotEmpty == true) {

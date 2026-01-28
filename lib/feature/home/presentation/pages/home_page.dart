@@ -145,7 +145,6 @@ class _HomePageState extends State<HomePage> {
 
               _buildPromoBanner(),
               const SizedBox(height: 24),
-
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
@@ -246,20 +245,57 @@ class _HomePageState extends State<HomePage> {
 
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: GridView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                childAspectRatio: 0.75,
-                                crossAxisSpacing: 14,
-                                mainAxisSpacing: 14,
-                              ),
-                          itemCount: _filteredProduct.length,
-                          itemBuilder: (context, index) {
-                            return ProductCard(
-                              product: _filteredProduct[index],
+                        child: LayoutBuilder(
+                          builder: (context, constraints) {
+                            final screenWidth = MediaQuery.of(
+                              context,
+                            ).size.width;
+                            final screenHeight = MediaQuery.of(
+                              context,
+                            ).size.height;
+
+                            int crossAxisCount = 2;
+                            if (screenWidth >= 600) crossAxisCount = 3;
+                            if (screenWidth >= 900) crossAxisCount = 4;
+
+                            // Hitung lebar item (dikurangi padding & spacing)
+                            final horizontalPadding = 40.0; // 20 * 2
+                            final totalSpacing = 14.0 * (crossAxisCount - 1);
+                            final itemWidth =
+                                (screenWidth -
+                                    horizontalPadding -
+                                    totalSpacing) /
+                                crossAxisCount;
+
+                            // Hitung tinggi item berdasarkan komponen:
+                            // - Gambar: 35% dari lebar layar untuk small screen, lebih kecil untuk large
+                            // - Konten: tinggi tetap sekitar 110-130px
+                            final imageHeight = screenWidth < 600
+                                ? screenWidth * 0.35
+                                : screenWidth * 0.28;
+                            final contentHeight = screenHeight < 700
+                                ? 110.0
+                                : 130.0;
+                            final itemHeight = imageHeight + contentHeight;
+
+                            final aspectRatio = itemWidth / itemHeight;
+
+                            return GridView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: crossAxisCount,
+                                    childAspectRatio: aspectRatio,
+                                    crossAxisSpacing: 14,
+                                    mainAxisSpacing: 14,
+                                  ),
+                              itemCount: _filteredProduct.length,
+                              itemBuilder: (context, index) {
+                                return ProductCard(
+                                  product: _filteredProduct[index],
+                                );
+                              },
                             );
                           },
                         ),

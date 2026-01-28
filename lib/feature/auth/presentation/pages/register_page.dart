@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/component/buttons.dart';
 import '../../../../core/component/custom_textformfield.dart';
+import '../../../../core/component/info_banner_card.dart';
 import '../../../../core/component/space.dart';
 import '../../../../core/extensions/build_context_ext.dart';
 import '../../../../core/style/color/colors_app.dart';
@@ -117,6 +118,12 @@ class _RegisterPageState extends State<RegisterPage> {
                             ),
                           ),
                           const SizedBox(height: 32),
+                          InfoBannerCard(
+                            label:
+                                'Saat ini, kami hanya mendukung pengiriman di wilayah Jawa Tengah saja. ',
+                            icon: Icons.info,
+                          ),
+                          SpaceHeight(16),
                           const Text(
                             'Nama Lengkap',
                             style: TextStyle(
@@ -204,6 +211,58 @@ class _RegisterPageState extends State<RegisterPage> {
                             ),
                           ),
                           const SizedBox(height: 8),
+                          // BlocBuilder<CityBloc, CityState>(
+                          //   builder: (context, state) {
+                          //     switch (state) {
+                          //       case LoadingCity():
+                          //         return const Center(
+                          //           child: CircularProgressIndicator(),
+                          //         );
+                          //       case CitySuccess(:final city):
+                          //         return CustomDropdown(
+                          //           hintText: 'Pilih Kabupaten/Kota',
+                          //           prefixIcon: const Icon(
+                          //             Icons.location_city_outlined,
+                          //             color: ColorsApp.primary,
+                          //             size: 20,
+                          //           ),
+                          //           items:
+                          //               city.data?.kabupaten
+                          //                   ?.map(
+                          //                     (e) => DropdownMenuItem(
+                          //                       value: e,
+                          //                       child: Text(e),
+                          //                     ),
+                          //                   )
+                          //                   .toList() ??
+                          //               [],
+                          //           onChanged: (value) {},
+                          //         );
+                          //       case ErrorCity():
+                          //         return CustomDropdown(
+                          //           hintText: 'Pilih Kabupaten/Kota',
+                          //           prefixIcon: const Icon(
+                          //             Icons.location_city_outlined,
+                          //             color: ColorsApp.primary,
+                          //             size: 20,
+                          //           ),
+                          //           items: [],
+                          //           onChanged: (value) {},
+                          //         );
+                          //       default:
+                          //         return CustomDropdown(
+                          //           hintText: 'Pilih Kabupaten/Kota',
+                          //           prefixIcon: const Icon(
+                          //             Icons.location_city_outlined,
+                          //             color: ColorsApp.primary,
+                          //             size: 20,
+                          //           ),
+                          //           items: [],
+                          //           onChanged: (value) {},
+                          //         );
+                          //     }
+                          //   },
+                          // ),
                           CustomTextFormField(
                             controller: _cityController,
                             hintText: 'Kabupaten/Kota',

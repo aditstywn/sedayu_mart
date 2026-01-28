@@ -257,7 +257,7 @@ class _AddressPageState extends State<AddressPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            address?.alamat ?? '-',
+                            '${address?.alamat ?? '-'}, ( ${address?.keterangan ?? '-'} )',
                             style: const TextStyle(
                               fontSize: 12,
                               color: ColorsApp.textSecondary,

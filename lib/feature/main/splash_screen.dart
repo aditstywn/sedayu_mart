@@ -42,6 +42,8 @@ class _SplashScreenState extends State<SplashScreen>
     );
 
     _controller.forward();
+
+    // context.read<CityBloc>().add(CityEvent.city());
   }
 
   @override

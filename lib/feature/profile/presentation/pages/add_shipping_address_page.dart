@@ -5,13 +5,16 @@ import 'package:latlong2/latlong.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../../core/component/buttons.dart';
+import '../../../../core/component/custom_dropdown.dart';
 import '../../../../core/component/custom_map.dart';
 import '../../../../core/component/custom_textformfield.dart';
+import '../../../../core/component/info_banner_card.dart';
 import '../../../../core/component/space.dart';
 import '../../../../core/config/location_service.dart';
 import '../../../../core/extensions/build_context_ext.dart';
 import '../../../../core/style/color/colors_app.dart';
 import '../../data/models/request/shipping_address_request_model.dart';
+import '../bloc/city/city_bloc.dart';
 import '../bloc/section/section_bloc.dart';
 import '../bloc/submit_profile/submit_profile_bloc.dart';
 
@@ -78,6 +81,7 @@ class _AddShippingAddressPageState extends State<AddShippingAddressPage> {
   void initState() {
     super.initState();
     _getCurrentLocation();
+    context.read<CityBloc>().add(const CityEvent.city());
     if (widget.initialAddress != null) {
       final address = widget.initialAddress!;
       _namaPenerimaController.text = address.namaPenerima ?? '';
@@ -112,6 +116,7 @@ class _AddShippingAddressPageState extends State<AddShippingAddressPage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            SpaceHeight(8),
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
@@ -132,6 +137,12 @@ class _AddShippingAddressPageState extends State<AddShippingAddressPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      InfoBannerCard(
+                        label:
+                            'Saat ini, kami hanya mendukung pengiriman di wilayah Jawa Tengah saja. ',
+                        icon: Icons.info,
+                      ),
+                      SpaceHeight(16),
                       // Nama Penerima
                       CustomTextFormField(
                         controller: _namaPenerimaController,
@@ -195,13 +206,24 @@ class _AddShippingAddressPageState extends State<AddShippingAddressPage> {
                         onAddressChanged:
                             (address, city, province, postalCode) {
                               if (widget.initialAddress != null) return;
-                              _kabupatenController.text = city ?? '';
-                              _provinsiController.text = province ?? '';
-                              _kodePosController.text = postalCode ?? '';
-                              _alamatController.text = address;
+                              setState(() {
+                                _kabupatenController.text = city ?? '';
+                                _provinsiController.text = province ?? '';
+                                _kodePosController.text = postalCode ?? '';
+                                _alamatController.text = address;
+                              });
                             },
                         showZoomControls: true,
                       ),
+
+                      Button.filled(
+                        height: 40,
+                        onPressed: _getCurrentLocation,
+                        label: 'Refresh Lokasi Saya',
+                        color: ColorsApp.primary,
+                        fontSize: 15,
+                      ),
+                      const SpaceHeight(16),
 
                       // Alamat Lengkap
                       CustomTextFormField(
@@ -224,20 +246,95 @@ class _AddShippingAddressPageState extends State<AddShippingAddressPage> {
                       const SpaceHeight(16),
 
                       // Kabupaten
-                      CustomTextFormField(
-                        controller: _kabupatenController,
-                        label: 'Kabupaten/Kota',
-                        hintText: 'Masukkan kabupaten/kota',
-                        prefixIcon: const Icon(
-                          Icons.location_city_outlined,
-                          size: 20,
-                        ),
-                        isRequired: true,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Kabupaten/Kota harus diisi';
+                      // CustomTextFormField(
+                      //   controller: _kabupatenController,
+                      //   label: 'Kabupaten/Kota',
+                      //   hintText: 'Masukkan kabupaten/kota',
+                      //   prefixIcon: const Icon(
+                      //     Icons.location_city_outlined,
+                      //     size: 20,
+                      //   ),
+                      //   isRequired: true,
+                      //   validator: (value) {
+                      //     if (value == null || value.isEmpty) {
+                      //       return 'Kabupaten/Kota harus diisi';
+                      //     }
+                      //     return null;
+                      //   },
+                      // ),
+                      BlocBuilder<CityBloc, CityState>(
+                        builder: (context, state) {
+                          switch (state) {
+                            case LoadingCity():
+                              return CustomDropdown(
+                                hintText: 'Pilih Kabupaten/Kota',
+                                prefixIcon: const Icon(
+                                  Icons.location_city_outlined,
+
+                                  size: 20,
+                                ),
+                                items: [],
+                                onChanged: (value) {},
+                              );
+                            case CitySuccess(:final city):
+                              return CustomDropdown(
+                                enableSearch: true,
+                                value: _kabupatenController.text.isNotEmpty
+                                    ? _kabupatenController.text
+                                    : null,
+                                selectedItems: city.data?.kabupaten?.map((
+                                  city,
+                                ) {
+                                  return Text(
+                                    city,
+                                    style: const TextStyle(fontSize: 14),
+                                  );
+                                }).toList(),
+                                hintText: 'Pilih Kabupaten/Kota',
+                                prefixIcon: const Icon(
+                                  Icons.location_city_outlined,
+
+                                  size: 20,
+                                ),
+                                items:
+                                    city.data?.kabupaten
+                                        ?.map(
+                                          (e) => DropdownMenuItem(
+                                            value: e,
+                                            child: Text(e),
+                                          ),
+                                        )
+                                        .toList() ??
+                                    [],
+                                onChanged: (value) {
+                                  setState(() {
+                                    _kabupatenController.text = value ?? '';
+                                  });
+                                },
+                              );
+                            case ErrorCity():
+                              return CustomDropdown(
+                                hintText: 'Pilih Kabupaten/Kota',
+                                prefixIcon: const Icon(
+                                  Icons.location_city_outlined,
+
+                                  size: 20,
+                                ),
+                                items: [],
+                                onChanged: (value) {},
+                              );
+                            default:
+                              return CustomDropdown(
+                                hintText: 'Pilih Kabupaten/Kota',
+                                prefixIcon: const Icon(
+                                  Icons.location_city_outlined,
+
+                                  size: 20,
+                                ),
+                                items: [],
+                                onChanged: (value) {},
+                              );
                           }
-                          return null;
                         },
                       ),
                       const SpaceHeight(16),

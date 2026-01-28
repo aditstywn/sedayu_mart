@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:smart_agro/feature/profile/data/models/request/profile_request_model.dart';
 import 'package:smart_agro/feature/profile/data/models/request/shipping_address_request_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:smart_agro/feature/profile/data/models/response/city_response_model.dart';
 
 import '../../../../core/config/api_driver.dart';
 import '../../../../core/config/handle_response.dart';
@@ -168,6 +169,24 @@ class ProfileRemoteDatasource {
       );
     } catch (e) {
       return const Left('Gagal Mengganti Password');
+    }
+  }
+
+  Future<Either<String, CityResponseModel>> city() async {
+    try {
+      final response = await _driver.request(
+        method: ApiMethod.get,
+        url: 'api/mobile/profil/kabupaten-dropdown',
+        body: '',
+      );
+
+      return handleResponse(
+        response: response,
+        fromJson: (String body) => CityResponseModel.fromJson(body),
+        errorMessage: 'Gagal Memuat Kota',
+      );
+    } catch (e) {
+      return const Left('Gagal Memuat Kota');
     }
   }
 }

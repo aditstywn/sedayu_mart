@@ -32,6 +32,13 @@ class _ProductCardState extends State<ProductCard> {
 
   @override
   Widget build(BuildContext context) {
+    // Hitung tinggi gambar secara dinamis berdasarkan lebar layar
+    final screenWidth = MediaQuery.of(context).size.width;
+    // Gunakan 35% dari lebar layar untuk small screen, 28% untuk large
+    final imageHeight = screenWidth < 600
+        ? screenWidth * 0.35
+        : screenWidth * 0.28;
+
     return GestureDetector(
       onTap: () {
         context.push(ProductDetailPage(idProduct: widget.product.id));
@@ -52,11 +59,11 @@ class _ProductCardState extends State<ProductCard> {
               ),
               child: CachedNetworkImage(
                 imageUrl: '${Url.baseUrl}/${widget.product.gambarUtama ?? ''}',
-                height: 120,
+                height: imageHeight,
                 width: double.infinity,
                 fit: BoxFit.cover,
                 placeholder: (context, url) => Container(
-                  height: 120,
+                  height: imageHeight,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
@@ -75,7 +82,7 @@ class _ProductCardState extends State<ProductCard> {
                   ),
                 ),
                 errorWidget: (context, url, error) => Container(
-                  height: 120,
+                  height: imageHeight,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
