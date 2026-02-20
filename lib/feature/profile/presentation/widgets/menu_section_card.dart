@@ -55,13 +55,13 @@ class MenuSectionCard extends StatelessWidget {
             },
           ),
 
-          _buildDivider(),
-          _buildMenuItem(
-            icon: Icons.help_outline,
-            title: 'Bantuan',
-            subtitle: 'Pusat bantuan & FAQ',
-            onTap: () {},
-          ),
+          // _buildDivider(),
+          // _buildMenuItem(
+          //   icon: Icons.help_outline,
+          //   title: 'Bantuan',
+          //   subtitle: 'Pusat bantuan & FAQ',
+          //   onTap: () {},
+          // ),
         ],
       ),
     );

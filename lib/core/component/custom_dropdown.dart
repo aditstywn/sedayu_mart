@@ -76,6 +76,25 @@ class _CustomDropdownState extends State<CustomDropdown> {
   OverlayEntry _createOverlayEntry() {
     RenderBox renderBox = context.findRenderObject() as RenderBox;
     var size = renderBox.size;
+    var position = renderBox.localToGlobal(Offset.zero);
+
+    // Get screen height
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    // Calculate available space below and above
+    final spaceBelow = screenHeight - (position.dy + size.height);
+    final spaceAbove = position.dy;
+
+    // Maximum dropdown height
+    const maxDropdownHeight = 300.0;
+
+    // Determine if dropdown should show above or below
+    final showAbove = spaceBelow < maxDropdownHeight && spaceAbove > spaceBelow;
+
+    // Calculate offset
+    final offset = showAbove
+        ? Offset(0, -(maxDropdownHeight + 5))
+        : Offset(0, size.height + 5);
 
     return OverlayEntry(
       builder: (context) => GestureDetector(
@@ -93,9 +112,10 @@ class _CustomDropdownState extends State<CustomDropdown> {
               child: CompositedTransformFollower(
                 link: _layerLink,
                 showWhenUnlinked: false,
-                offset: Offset(0, size.height + 5),
+                offset: offset,
                 child: Material(
-                  elevation: 8,
+                  elevation: 16,
+                  shadowColor: Colors.black.withAlpha(100),
                   borderRadius: BorderRadius.circular(12),
                   child: StatefulBuilder(
                     builder: (context, setOverlayState) {

@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/component/buttons.dart';
+import '../../../../core/component/custom_dropdown.dart';
 import '../../../../core/component/custom_textformfield.dart';
 import '../../../../core/component/space.dart';
 import '../../../../core/config/url.dart';
@@ -13,6 +14,7 @@ import '../../../../core/extensions/build_context_ext.dart';
 import '../../../../core/style/color/colors_app.dart';
 import '../../data/models/request/profile_request_model.dart';
 import '../../data/models/response/profile_response_model.dart';
+import '../bloc/city/city_bloc.dart';
 import '../bloc/profile/profile_bloc.dart';
 import '../bloc/submit_profile/submit_profile_bloc.dart';
 
@@ -56,6 +58,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
   @override
   void initState() {
     super.initState();
+    context.read<CityBloc>().add(const CityEvent.city());
 
     _nameController.text = widget.profile?.nama ?? '';
     _addressController.text = widget.profile?.alamat ?? '';
@@ -251,20 +254,95 @@ class _UpdateProfileState extends State<UpdateProfile> {
                           const SpaceHeight(16),
 
                           // Kabupaten
-                          CustomTextFormField(
-                            controller: _citylController,
-                            label: 'Kabupaten/Kota',
-                            hintText: 'Masukkan kabupaten/kota',
-                            prefixIcon: const Icon(
-                              Icons.location_city_outlined,
-                              size: 20,
-                            ),
-                            isRequired: true,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Kabupaten/Kota harus diisi';
+                          // CustomTextFormField(
+                          //   controller: _citylController,
+                          //   label: 'Kabupaten/Kota',
+                          //   hintText: 'Masukkan kabupaten/kota',
+                          //   prefixIcon: const Icon(
+                          //     Icons.location_city_outlined,
+                          //     size: 20,
+                          //   ),
+                          //   isRequired: true,
+                          //   validator: (value) {
+                          //     if (value == null || value.isEmpty) {
+                          //       return 'Kabupaten/Kota harus diisi';
+                          //     }
+                          //     return null;
+                          //   },
+                          // ),
+                          BlocBuilder<CityBloc, CityState>(
+                            builder: (context, state) {
+                              switch (state) {
+                                case LoadingCity():
+                                  return CustomDropdown(
+                                    hintText: 'Pilih Kabupaten/Kota',
+                                    prefixIcon: const Icon(
+                                      Icons.location_city_outlined,
+
+                                      size: 20,
+                                    ),
+                                    items: [],
+                                    onChanged: (value) {},
+                                  );
+                                case CitySuccess(:final city):
+                                  return CustomDropdown(
+                                    enableSearch: true,
+                                    value: _citylController.text.isNotEmpty
+                                        ? _citylController.text
+                                        : null,
+                                    selectedItems: city.data?.kabupaten?.map((
+                                      city,
+                                    ) {
+                                      return Text(
+                                        city,
+                                        style: const TextStyle(fontSize: 14),
+                                      );
+                                    }).toList(),
+                                    hintText: 'Pilih Kabupaten/Kota',
+                                    prefixIcon: const Icon(
+                                      Icons.location_city_outlined,
+
+                                      size: 20,
+                                    ),
+                                    items:
+                                        city.data?.kabupaten
+                                            ?.map(
+                                              (e) => DropdownMenuItem(
+                                                value: e,
+                                                child: Text(e),
+                                              ),
+                                            )
+                                            .toList() ??
+                                        [],
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _citylController.text = value ?? '';
+                                      });
+                                    },
+                                  );
+                                case ErrorCity():
+                                  return CustomDropdown(
+                                    hintText: 'Pilih Kabupaten/Kota',
+                                    prefixIcon: const Icon(
+                                      Icons.location_city_outlined,
+
+                                      size: 20,
+                                    ),
+                                    items: [],
+                                    onChanged: (value) {},
+                                  );
+                                default:
+                                  return CustomDropdown(
+                                    hintText: 'Pilih Kabupaten/Kota',
+                                    prefixIcon: const Icon(
+                                      Icons.location_city_outlined,
+
+                                      size: 20,
+                                    ),
+                                    items: [],
+                                    onChanged: (value) {},
+                                  );
                               }
-                              return null;
                             },
                           ),
                         ],
