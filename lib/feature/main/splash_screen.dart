@@ -55,44 +55,48 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder(
-        future: _checkAppStatus(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return _loadingScreen();
-          } else if (snapshot.hasData) {
-            final data = snapshot.data as Map<String, bool>;
-            final hasSeenOnboarding = data['hasSeenOnboarding'] ?? false;
-            final hasAccessToken = data['hasAccessToken'] ?? false;
+      body: SafeArea(
+        child: FutureBuilder(
+          future: _checkAppStatus(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return _loadingScreen();
+            } else if (snapshot.hasData) {
+              final data = snapshot.data as Map<String, bool>;
+              final hasSeenOnboarding = data['hasSeenOnboarding'] ?? false;
+              final hasAccessToken = data['hasAccessToken'] ?? false;
 
-            Future.delayed(const Duration(seconds: 2), () {
-              if (context.mounted) {
-                if (!hasSeenOnboarding) {
-                  // First time user - show onboarding
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const OnboardingPage(),
-                    ),
-                  );
-                } else if (hasAccessToken) {
-                  // User is logged in - go to main
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const MainNav()),
-                  );
-                } else {
-                  // User has seen onboarding but not logged in - go to login
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const LoginPage()),
-                  );
+              Future.delayed(const Duration(seconds: 2), () {
+                if (context.mounted) {
+                  if (!hasSeenOnboarding) {
+                    // First time user - show onboarding
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const OnboardingPage(),
+                      ),
+                    );
+                  } else if (hasAccessToken) {
+                    // User is logged in - go to main
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => const MainNav()),
+                    );
+                  } else {
+                    // User has seen onboarding but not logged in - go to login
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const LoginPage(),
+                      ),
+                    );
+                  }
                 }
-              }
-            });
-          }
-          return _loadingScreen();
-        },
+              });
+            }
+            return _loadingScreen();
+          },
+        ),
       ),
     );
   }
@@ -119,15 +123,32 @@ class _SplashScreenState extends State<SplashScreen>
               opacity: _fadeAnimation,
               child: ScaleTransition(
                 scale: _scaleAnimation,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      'assets/images/Splash-SmartAgro.png',
-                      width: 300,
-                      height: 300,
-                    ),
-                  ],
+                child: SizedBox(
+                  height: double.infinity,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        flex: 30,
+                        child: Image.asset(
+                          'assets/images/Splash-SmartAgro.png',
+                          width: 350,
+                          height: 350,
+                        ),
+                      ),
+                      Spacer(),
+                      Text(
+                        'Didanai Oleh: \nKemdiktisaintek Republik Indonesia',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey[600],
+                          fontStyle: FontStyle.italic,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );

@@ -296,7 +296,7 @@ class _OrderCardState extends State<OrderCard> {
         bgColor = const Color(0xFFE8F5E9);
         textColor = const Color(0xFF388E3C);
         break;
-      case 'Dibatalkan':
+      case 'Ditolak':
         bgColor = const Color(0xFFFFEBEE);
         textColor = const Color(0xFFD32F2F);
         break;

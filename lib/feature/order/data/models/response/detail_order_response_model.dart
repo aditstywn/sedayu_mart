@@ -41,7 +41,8 @@ class Data {
   final String? catatan;
   final dynamic keterangan;
   final List<Item>? items;
-  final dynamic informasiPengiriman;
+  final InformasiPengiriman? informasiPengiriman;
+  final String? hubungiPenjual;
 
   Data({
     this.pesananId,
@@ -59,6 +60,7 @@ class Data {
     this.keterangan,
     this.items,
     this.informasiPengiriman,
+    this.hubungiPenjual,
   });
 
   factory Data.fromJson(String str) => Data.fromMap(json.decode(str));
@@ -88,7 +90,10 @@ class Data {
     items: json["items"] == null
         ? []
         : List<Item>.from(json["items"]!.map((x) => Item.fromMap(x))),
-    informasiPengiriman: json["informasi_pengiriman"],
+    informasiPengiriman: json["informasi_pengiriman"] == null
+        ? null
+        : InformasiPengiriman.fromMap(json["informasi_pengiriman"]),
+    hubungiPenjual: json["hubungi_penjual"],
   );
 
   Map<String, dynamic> toMap() => {
@@ -108,7 +113,8 @@ class Data {
     "items": items == null
         ? []
         : List<dynamic>.from(items!.map((x) => x.toMap())),
-    "informasi_pengiriman": informasiPengiriman,
+    "informasi_pengiriman": informasiPengiriman?.toMap(),
+    "hubungi_penjual": hubungiPenjual,
   };
 }
 
@@ -236,5 +242,39 @@ class Rekening {
     "id": id,
     "nama_bank": namaBank,
     "nomor_rekening": nomorRekening,
+  };
+}
+
+class InformasiPengiriman {
+  final String? nomorPengiriman;
+  final String? namaEkspedisi;
+  final String? estimasiTibaMulai;
+  final String? estimasiTibaSelesai;
+
+  InformasiPengiriman({
+    this.nomorPengiriman,
+    this.namaEkspedisi,
+    this.estimasiTibaMulai,
+    this.estimasiTibaSelesai,
+  });
+
+  factory InformasiPengiriman.fromJson(String str) =>
+      InformasiPengiriman.fromMap(json.decode(str));
+
+  String toJson() => json.encode(toMap());
+
+  factory InformasiPengiriman.fromMap(Map<String, dynamic> json) =>
+      InformasiPengiriman(
+        nomorPengiriman: json["nomor_pengiriman"],
+        namaEkspedisi: json["nama_ekspedisi"],
+        estimasiTibaMulai: json["estimasi_tiba_mulai"],
+        estimasiTibaSelesai: json["estimasi_tiba_selesai"],
+      );
+
+  Map<String, dynamic> toMap() => {
+    "nomor_pengiriman": nomorPengiriman,
+    "nama_ekspedisi": namaEkspedisi,
+    "estimasi_tiba_mulai": estimasiTibaMulai,
+    "estimasi_tiba_selesai": estimasiTibaSelesai,
   };
 }

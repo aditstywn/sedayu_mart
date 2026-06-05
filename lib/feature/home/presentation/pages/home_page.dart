@@ -30,9 +30,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int currentBannerIndex = 0;
-  final PageController _bannerPageController = PageController();
+  // final PageController _bannerPageController = PageController();
   final TextEditingController _searchController = TextEditingController();
-  Timer? _bannerTimer;
+  // Timer? _bannerTimer;
   List<Produk> _product = [];
   List<Produk> _filteredProduct = [];
   ProfilProfil? user;
@@ -75,7 +75,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _startBannerAutoScroll();
+    // _startBannerAutoScroll();
     _getCurrentLocation();
     getUser();
   }
@@ -105,25 +105,25 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void _startBannerAutoScroll() {
-    _bannerTimer = Timer.periodic(const Duration(seconds: 3), (timer) {
-      if (currentBannerIndex < 2) {
-        currentBannerIndex++;
-      } else {
-        currentBannerIndex = 0;
-      }
-      _bannerPageController.animateToPage(
-        currentBannerIndex,
-        duration: const Duration(milliseconds: 400),
-        curve: Curves.easeInOut,
-      );
-    });
-  }
+  // void _startBannerAutoScroll() {
+  //   _bannerTimer = Timer.periodic(const Duration(seconds: 3), (timer) {
+  //     if (currentBannerIndex < 2) {
+  //       currentBannerIndex++;
+  //     } else {
+  //       currentBannerIndex = 0;
+  //     }
+  //     _bannerPageController.animateToPage(
+  //       currentBannerIndex,
+  //       duration: const Duration(milliseconds: 400),
+  //       curve: Curves.easeInOut,
+  //     );
+  //   });
+  // }
 
   @override
   void dispose() {
-    _bannerTimer?.cancel();
-    _bannerPageController.dispose();
+    // _bannerTimer?.cancel();
+    // _bannerPageController.dispose();
     super.dispose();
   }
 
@@ -143,7 +143,19 @@ class _HomePageState extends State<HomePage> {
               _buildSearchBar(),
               const SizedBox(height: 24),
 
-              _buildPromoBanner(),
+              // _buildPromoBanner(),
+              Container(
+                height: 200,
+                margin: const EdgeInsets.symmetric(horizontal: 20),
+                color: ColorsApp.white,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: Image.asset(
+                    'assets/images/baner.png',
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
               const SizedBox(height: 24),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -529,195 +541,195 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildPromoBanner() {
-    final List<Map<String, dynamic>> banners = [
-      {
-        'title': 'Sayuran\nSegar',
-        'subtitle': 'Dapatkan diskon',
-        'discount': 'Hemat hingga 30%',
-        'emoji1': '🥬',
-        'emoji2': '🥕',
-        'bgColor': ColorsApp.lightGreen.withAlpha(51),
-      },
-      {
-        'title': 'Buah\nSegar',
-        'subtitle': 'Promo spesial',
-        'discount': 'Diskon 25%',
-        'emoji1': '🍎',
-        'emoji2': '🍌',
-        'bgColor': ColorsApp.accentGreen.withAlpha(38),
-      },
-      {
-        'title': 'Hasil Pertanian\nBerkualitas',
-        'subtitle': 'Penawaran terbatas',
-        'discount': 'Cashback 20%',
-        'emoji1': '🌽',
-        'emoji2': '🥜',
-        'bgColor': ColorsApp.primary.withAlpha(38),
-      },
-    ];
+  // Widget _buildPromoBanner() {
+  //   final List<Map<String, dynamic>> banners = [
+  //     {
+  //       'title': 'Sayuran\nSegar',
+  //       'subtitle': 'Dapatkan diskon',
+  //       'discount': 'Hemat hingga 30%',
+  //       'emoji1': '🥬',
+  //       'emoji2': '🥕',
+  //       'bgColor': ColorsApp.lightGreen.withAlpha(51),
+  //     },
+  //     {
+  //       'title': 'Buah\nSegar',
+  //       'subtitle': 'Promo spesial',
+  //       'discount': 'Diskon 25%',
+  //       'emoji1': '🍎',
+  //       'emoji2': '🍌',
+  //       'bgColor': ColorsApp.accentGreen.withAlpha(38),
+  //     },
+  //     {
+  //       'title': 'Hasil Pertanian\nBerkualitas',
+  //       'subtitle': 'Penawaran terbatas',
+  //       'discount': 'Cashback 20%',
+  //       'emoji1': '🌽',
+  //       'emoji2': '🥜',
+  //       'bgColor': ColorsApp.primary.withAlpha(38),
+  //     },
+  //   ];
 
-    return Column(
-      children: [
-        SizedBox(
-          height: 160,
-          child: PageView.builder(
-            controller: _bannerPageController,
-            onPageChanged: (index) {
-              setState(() {
-                currentBannerIndex = index;
-              });
-            },
-            itemCount: banners.length,
-            itemBuilder: (context, index) {
-              final banner = banners[index];
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: banner['bgColor'] as Color,
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: ColorsApp.primary.withAlpha(38),
-                      width: 1,
-                    ),
-                  ),
-                  child: Stack(
-                    children: [
-                      Positioned(
-                        right: -20,
-                        bottom: -20,
-                        child: Container(
-                          width: 150,
-                          height: 150,
-                          decoration: BoxDecoration(
-                            color: ColorsApp.primary.withAlpha(20),
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        right: 40,
-                        top: -30,
-                        child: Container(
-                          width: 100,
-                          height: 100,
-                          decoration: BoxDecoration(
-                            color: ColorsApp.accentGreen.withAlpha(26),
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                      ),
+  //   return Column(
+  //     children: [
+  //       SizedBox(
+  //         height: 160,
+  //         child: PageView.builder(
+  //           controller: _bannerPageController,
+  //           onPageChanged: (index) {
+  //             setState(() {
+  //               currentBannerIndex = index;
+  //             });
+  //           },
+  //           itemCount: banners.length,
+  //           itemBuilder: (context, index) {
+  //             final banner = banners[index];
+  //             return Padding(
+  //               padding: const EdgeInsets.symmetric(horizontal: 20),
+  //               child: Container(
+  //                 decoration: BoxDecoration(
+  //                   color: banner['bgColor'] as Color,
+  //                   borderRadius: BorderRadius.circular(20),
+  //                   border: Border.all(
+  //                     color: ColorsApp.primary.withAlpha(38),
+  //                     width: 1,
+  //                   ),
+  //                 ),
+  //                 child: Stack(
+  //                   children: [
+  //                     Positioned(
+  //                       right: -20,
+  //                       bottom: -20,
+  //                       child: Container(
+  //                         width: 150,
+  //                         height: 150,
+  //                         decoration: BoxDecoration(
+  //                           color: ColorsApp.primary.withAlpha(20),
+  //                           shape: BoxShape.circle,
+  //                         ),
+  //                       ),
+  //                     ),
+  //                     Positioned(
+  //                       right: 40,
+  //                       top: -30,
+  //                       child: Container(
+  //                         width: 100,
+  //                         height: 100,
+  //                         decoration: BoxDecoration(
+  //                           color: ColorsApp.accentGreen.withAlpha(26),
+  //                           shape: BoxShape.circle,
+  //                         ),
+  //                       ),
+  //                     ),
 
-                      Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              flex: 6,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    banner['subtitle'] as String,
-                                    style: SedayuTextStyles.bodyLargeMedium
-                                        .copyWith(
-                                          color: ColorsApp.textSecondary,
-                                          fontSize: 13,
-                                        ),
-                                  ),
-                                  const SizedBox(height: 6),
-                                  Text(
-                                    banner['title'] as String,
-                                    style: SedayuTextStyles.headlineSmall
-                                        .copyWith(
-                                          color: ColorsApp.textPrimary,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 22,
-                                          height: 1.2,
-                                        ),
-                                  ),
-                                ],
-                              ),
-                            ),
+  //                     Padding(
+  //                       padding: const EdgeInsets.all(20),
+  //                       child: Row(
+  //                         children: [
+  //                           Expanded(
+  //                             flex: 6,
+  //                             child: Column(
+  //                               crossAxisAlignment: CrossAxisAlignment.start,
+  //                               mainAxisAlignment: MainAxisAlignment.center,
+  //                               children: [
+  //                                 Text(
+  //                                   banner['subtitle'] as String,
+  //                                   style: SedayuTextStyles.bodyLargeMedium
+  //                                       .copyWith(
+  //                                         color: ColorsApp.textSecondary,
+  //                                         fontSize: 13,
+  //                                       ),
+  //                                 ),
+  //                                 const SizedBox(height: 6),
+  //                                 Text(
+  //                                   banner['title'] as String,
+  //                                   style: SedayuTextStyles.headlineSmall
+  //                                       .copyWith(
+  //                                         color: ColorsApp.textPrimary,
+  //                                         fontWeight: FontWeight.bold,
+  //                                         fontSize: 22,
+  //                                         height: 1.2,
+  //                                       ),
+  //                                 ),
+  //                               ],
+  //                             ),
+  //                           ),
 
-                            Expanded(
-                              flex: 4,
-                              child: Stack(
-                                children: [
-                                  Positioned(
-                                    right: 0,
-                                    bottom: 10,
-                                    child: Container(
-                                      width: 70,
-                                      height: 90,
-                                      decoration: BoxDecoration(
-                                        color: ColorsApp.white.withAlpha(153),
-                                        borderRadius: BorderRadius.circular(16),
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          banner['emoji1'] as String,
-                                          style: const TextStyle(fontSize: 50),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    right: 40,
-                                    top: 20,
-                                    child: Container(
-                                      width: 55,
-                                      height: 70,
-                                      decoration: BoxDecoration(
-                                        color: ColorsApp.white.withAlpha(128),
-                                        borderRadius: BorderRadius.circular(14),
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          banner['emoji2'] as String,
-                                          style: const TextStyle(fontSize: 35),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-        const SizedBox(height: 12),
+  //                           Expanded(
+  //                             flex: 4,
+  //                             child: Stack(
+  //                               children: [
+  //                                 Positioned(
+  //                                   right: 0,
+  //                                   bottom: 10,
+  //                                   child: Container(
+  //                                     width: 70,
+  //                                     height: 90,
+  //                                     decoration: BoxDecoration(
+  //                                       color: ColorsApp.white.withAlpha(153),
+  //                                       borderRadius: BorderRadius.circular(16),
+  //                                     ),
+  //                                     child: Center(
+  //                                       child: Text(
+  //                                         banner['emoji1'] as String,
+  //                                         style: const TextStyle(fontSize: 50),
+  //                                       ),
+  //                                     ),
+  //                                   ),
+  //                                 ),
+  //                                 Positioned(
+  //                                   right: 40,
+  //                                   top: 20,
+  //                                   child: Container(
+  //                                     width: 55,
+  //                                     height: 70,
+  //                                     decoration: BoxDecoration(
+  //                                       color: ColorsApp.white.withAlpha(128),
+  //                                       borderRadius: BorderRadius.circular(14),
+  //                                     ),
+  //                                     child: Center(
+  //                                       child: Text(
+  //                                         banner['emoji2'] as String,
+  //                                         style: const TextStyle(fontSize: 35),
+  //                                       ),
+  //                                     ),
+  //                                   ),
+  //                                 ),
+  //                               ],
+  //                             ),
+  //                           ),
+  //                         ],
+  //                       ),
+  //                     ),
+  //                   ],
+  //                 ),
+  //               ),
+  //             );
+  //           },
+  //         ),
+  //       ),
+  //       const SizedBox(height: 12),
 
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(
-            3,
-            (index) => AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              margin: const EdgeInsets.symmetric(horizontal: 4),
-              width: currentBannerIndex == index ? 24 : 8,
-              height: 8,
-              decoration: BoxDecoration(
-                color: currentBannerIndex == index
-                    ? ColorsApp.primary
-                    : ColorsApp.borderColor,
-                borderRadius: BorderRadius.circular(4),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+  //       Row(
+  //         mainAxisAlignment: MainAxisAlignment.center,
+  //         children: List.generate(
+  //           3,
+  //           (index) => AnimatedContainer(
+  //             duration: const Duration(milliseconds: 300),
+  //             margin: const EdgeInsets.symmetric(horizontal: 4),
+  //             width: currentBannerIndex == index ? 24 : 8,
+  //             height: 8,
+  //             decoration: BoxDecoration(
+  //               color: currentBannerIndex == index
+  //                   ? ColorsApp.primary
+  //                   : ColorsApp.borderColor,
+  //               borderRadius: BorderRadius.circular(4),
+  //             ),
+  //           ),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 
   // Widget _buildCategories() {
   //   return Column(

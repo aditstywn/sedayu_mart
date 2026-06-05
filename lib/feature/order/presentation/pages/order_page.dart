@@ -26,7 +26,7 @@ class _OrderPageState extends State<OrderPage>
     'Diproses',
     'Dikirim',
     'Selesai',
-    'Dibatalkan',
+    'Ditolak',
   ];
 
   // Dummy data pesanan

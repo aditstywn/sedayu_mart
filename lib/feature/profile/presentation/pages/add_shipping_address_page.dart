@@ -111,403 +111,411 @@ class _AddShippingAddressPageState extends State<AddShippingAddressPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Tambah Alamat')),
-      body: Form(
-        key: _formKey,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SpaceHeight(8),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
-                child: Container(
-                  padding: EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: ColorsApp.white,
-                    borderRadius: BorderRadius.circular(10),
+      body: SafeArea(
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SpaceHeight(8),
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(16),
+                  child: Container(
+                    padding: EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: ColorsApp.white,
+                      borderRadius: BorderRadius.circular(10),
 
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withAlpha(10),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      InfoBannerCard(
-                        label:
-                            'Saat ini, kami hanya mendukung pengiriman di wilayah Jawa Tengah saja. ',
-                        icon: Icons.info,
-                      ),
-                      SpaceHeight(16),
-                      // Nama Penerima
-                      CustomTextFormField(
-                        controller: _namaPenerimaController,
-                        label: 'Nama ',
-                        hintText: 'Masukkan nama penerima',
-                        prefixIcon: const Icon(Icons.person_outline, size: 20),
-                        isRequired: true,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Nama penerima harus diisi';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SpaceHeight(16),
-
-                      // Nomor Telepon
-                      CustomTextFormField(
-                        controller: _nomorTeleponController,
-                        label: 'Nomor Telepon',
-                        hintText: 'Masukkan nomor telepon',
-                        keyboardType: TextInputType.phone,
-                        prefixIcon: const Icon(Icons.phone_outlined, size: 20),
-                        isRequired: true,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Nomor telepon harus diisi';
-                          }
-                          if (value.length < 10) {
-                            return 'Nomor telepon minimal 10 digit';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SpaceHeight(16),
-
-                      CustomMap(
-                        latitude: currentPosition?.latitude ?? 0,
-                        longitude: currentPosition?.longitude ?? 0,
-                        zoom: 15,
-                        onTap: (LatLng point) {
-                          setState(() {
-                            if (currentPosition != null) {
-                              currentPosition = Position(
-                                latitude: point.latitude,
-                                longitude: point.longitude,
-                                timestamp: currentPosition!.timestamp,
-                                accuracy: currentPosition!.accuracy,
-                                altitude: currentPosition!.altitude,
-                                altitudeAccuracy:
-                                    currentPosition!.altitudeAccuracy,
-                                heading: currentPosition!.heading,
-                                headingAccuracy:
-                                    currentPosition!.headingAccuracy,
-                                speed: currentPosition!.speed,
-                                speedAccuracy: currentPosition!.speedAccuracy,
-                              );
-                            }
-                          });
-                        },
-                        onAddressChanged:
-                            (address, city, province, postalCode) {
-                              if (widget.initialAddress != null) return;
-                              setState(() {
-                                _kabupatenController.text = city ?? '';
-                                _provinsiController.text = province ?? '';
-                                _kodePosController.text = postalCode ?? '';
-                                _alamatController.text = address;
-                              });
-                            },
-                        showZoomControls: true,
-                      ),
-
-                      Button.filled(
-                        height: 40,
-                        onPressed: _getCurrentLocation,
-                        label: 'Refresh Lokasi Saya',
-                        color: ColorsApp.primary,
-                        fontSize: 15,
-                      ),
-                      const SpaceHeight(16),
-
-                      // Alamat Lengkap
-                      CustomTextFormField(
-                        controller: _alamatController,
-                        label: 'Alamat Lengkap',
-                        hintText: 'Masukkan alamat lengkap',
-                        maxLines: 3,
-                        prefixIcon: const Icon(
-                          Icons.location_on_outlined,
-                          size: 20,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withAlpha(10),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
                         ),
-                        isRequired: true,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Alamat harus diisi';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SpaceHeight(16),
-
-                      // Kabupaten
-                      // CustomTextFormField(
-                      //   controller: _kabupatenController,
-                      //   label: 'Kabupaten/Kota',
-                      //   hintText: 'Masukkan kabupaten/kota',
-                      //   prefixIcon: const Icon(
-                      //     Icons.location_city_outlined,
-                      //     size: 20,
-                      //   ),
-                      //   isRequired: true,
-                      //   validator: (value) {
-                      //     if (value == null || value.isEmpty) {
-                      //       return 'Kabupaten/Kota harus diisi';
-                      //     }
-                      //     return null;
-                      //   },
-                      // ),
-                      BlocBuilder<CityBloc, CityState>(
-                        builder: (context, state) {
-                          switch (state) {
-                            case LoadingCity():
-                              return CustomDropdown(
-                                hintText: 'Pilih Kabupaten/Kota',
-                                prefixIcon: const Icon(
-                                  Icons.location_city_outlined,
-
-                                  size: 20,
-                                ),
-                                items: [],
-                                onChanged: (value) {},
-                              );
-                            case CitySuccess(:final city):
-                              return CustomDropdown(
-                                enableSearch: true,
-                                value: _kabupatenController.text.isNotEmpty
-                                    ? _kabupatenController.text
-                                    : null,
-                                selectedItems: city.data?.kabupaten?.map((
-                                  city,
-                                ) {
-                                  return Text(
-                                    city,
-                                    style: const TextStyle(fontSize: 14),
-                                  );
-                                }).toList(),
-                                hintText: 'Pilih Kabupaten/Kota',
-                                prefixIcon: const Icon(
-                                  Icons.location_city_outlined,
-
-                                  size: 20,
-                                ),
-                                items:
-                                    city.data?.kabupaten
-                                        ?.map(
-                                          (e) => DropdownMenuItem(
-                                            value: e,
-                                            child: Text(e),
-                                          ),
-                                        )
-                                        .toList() ??
-                                    [],
-                                onChanged: (value) {
-                                  setState(() {
-                                    _kabupatenController.text = value ?? '';
-                                  });
-                                },
-                              );
-                            case ErrorCity():
-                              return CustomDropdown(
-                                hintText: 'Pilih Kabupaten/Kota',
-                                prefixIcon: const Icon(
-                                  Icons.location_city_outlined,
-
-                                  size: 20,
-                                ),
-                                items: [],
-                                onChanged: (value) {},
-                              );
-                            default:
-                              return CustomDropdown(
-                                hintText: 'Pilih Kabupaten/Kota',
-                                prefixIcon: const Icon(
-                                  Icons.location_city_outlined,
-
-                                  size: 20,
-                                ),
-                                items: [],
-                                onChanged: (value) {},
-                              );
-                          }
-                        },
-                      ),
-                      const SpaceHeight(16),
-
-                      // Provinsi
-                      CustomTextFormField(
-                        controller: _provinsiController,
-                        label: 'Provinsi',
-                        hintText: 'Masukkan provinsi',
-                        prefixIcon: const Icon(Icons.map_outlined, size: 20),
-                        isRequired: true,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Provinsi harus diisi';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SpaceHeight(16),
-
-                      // Kode Pos
-                      CustomTextFormField(
-                        controller: _kodePosController,
-                        label: 'Kode Pos',
-                        hintText: 'Masukkan kode pos',
-                        keyboardType: TextInputType.number,
-                        prefixIcon: const Icon(
-                          Icons.markunread_mailbox_outlined,
-                          size: 20,
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        InfoBannerCard(
+                          label:
+                              'Saat ini, kami hanya mendukung pengiriman di wilayah Jawa Tengah saja. ',
+                          icon: Icons.info,
                         ),
-                        isRequired: true,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Kode pos harus diisi';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SpaceHeight(16),
-
-                      // Keterangan
-                      CustomTextFormField(
-                        controller: _keteranganController,
-                        label: 'Keterangan (Opsional)',
-                        hintText: 'Contoh: Rumah, Kantor, Kost',
-                        prefixIcon: const Icon(Icons.label_outline, size: 20),
-                      ),
-                      const SpaceHeight(20),
-
-                      // Checkbox Jadikan Alamat Utama
-                      Container(
-                        decoration: BoxDecoration(
-                          color: ColorsApp.white,
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                            color: ColorsApp.borderColor.withAlpha(128),
-                            width: 1,
+                        SpaceHeight(16),
+                        // Nama Penerima
+                        CustomTextFormField(
+                          controller: _namaPenerimaController,
+                          label: 'Nama ',
+                          hintText: 'Masukkan nama penerima',
+                          prefixIcon: const Icon(
+                            Icons.person_outline,
+                            size: 20,
                           ),
+                          isRequired: true,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Nama penerima harus diisi';
+                            }
+                            return null;
+                          },
                         ),
-                        child: CheckboxListTile(
-                          value: _isUtama == 1,
-                          onChanged: (value) {
+                        const SpaceHeight(16),
+
+                        // Nomor Telepon
+                        CustomTextFormField(
+                          controller: _nomorTeleponController,
+                          label: 'Nomor Telepon',
+                          hintText: 'Masukkan nomor telepon',
+                          keyboardType: TextInputType.phone,
+                          prefixIcon: const Icon(
+                            Icons.phone_outlined,
+                            size: 20,
+                          ),
+                          isRequired: true,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Nomor telepon harus diisi';
+                            }
+                            if (value.length < 10) {
+                              return 'Nomor telepon minimal 10 digit';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SpaceHeight(16),
+
+                        CustomMap(
+                          latitude: currentPosition?.latitude ?? 0,
+                          longitude: currentPosition?.longitude ?? 0,
+                          zoom: 15,
+                          onTap: (LatLng point) {
                             setState(() {
-                              _isUtama = value == true ? 1 : 0;
+                              if (currentPosition != null) {
+                                currentPosition = Position(
+                                  latitude: point.latitude,
+                                  longitude: point.longitude,
+                                  timestamp: currentPosition!.timestamp,
+                                  accuracy: currentPosition!.accuracy,
+                                  altitude: currentPosition!.altitude,
+                                  altitudeAccuracy:
+                                      currentPosition!.altitudeAccuracy,
+                                  heading: currentPosition!.heading,
+                                  headingAccuracy:
+                                      currentPosition!.headingAccuracy,
+                                  speed: currentPosition!.speed,
+                                  speedAccuracy: currentPosition!.speedAccuracy,
+                                );
+                              }
                             });
                           },
-                          title: const Text(
-                            'Jadikan alamat utama',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          subtitle: const Text(
-                            'Alamat ini akan menjadi pilihan default',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: ColorsApp.textSecondary,
-                            ),
-                          ),
-                          activeColor: ColorsApp.primary,
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 4,
-                          ),
-                          controlAffinity: ListTileControlAffinity.leading,
+                          onAddressChanged:
+                              (address, city, province, postalCode) {
+                                if (widget.initialAddress != null) return;
+                                setState(() {
+                                  _kabupatenController.text = city ?? '';
+                                  _provinsiController.text = province ?? '';
+                                  _kodePosController.text = postalCode ?? '';
+                                  _alamatController.text = address;
+                                });
+                              },
+                          showZoomControls: true,
                         ),
-                      ),
-                    ],
+
+                        Button.filled(
+                          height: 40,
+                          onPressed: _getCurrentLocation,
+                          label: 'Refresh Lokasi Saya',
+                          color: ColorsApp.primary,
+                          fontSize: 15,
+                        ),
+                        const SpaceHeight(16),
+
+                        // Alamat Lengkap
+                        CustomTextFormField(
+                          controller: _alamatController,
+                          label: 'Alamat Lengkap',
+                          hintText: 'Masukkan alamat lengkap',
+                          maxLines: 3,
+                          prefixIcon: const Icon(
+                            Icons.location_on_outlined,
+                            size: 20,
+                          ),
+                          isRequired: true,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Alamat harus diisi';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SpaceHeight(16),
+
+                        // Kabupaten
+                        // CustomTextFormField(
+                        //   controller: _kabupatenController,
+                        //   label: 'Kabupaten/Kota',
+                        //   hintText: 'Masukkan kabupaten/kota',
+                        //   prefixIcon: const Icon(
+                        //     Icons.location_city_outlined,
+                        //     size: 20,
+                        //   ),
+                        //   isRequired: true,
+                        //   validator: (value) {
+                        //     if (value == null || value.isEmpty) {
+                        //       return 'Kabupaten/Kota harus diisi';
+                        //     }
+                        //     return null;
+                        //   },
+                        // ),
+                        BlocBuilder<CityBloc, CityState>(
+                          builder: (context, state) {
+                            switch (state) {
+                              case LoadingCity():
+                                return CustomDropdown(
+                                  hintText: 'Pilih Kabupaten/Kota',
+                                  prefixIcon: const Icon(
+                                    Icons.location_city_outlined,
+
+                                    size: 20,
+                                  ),
+                                  items: [],
+                                  onChanged: (value) {},
+                                );
+                              case CitySuccess(:final city):
+                                return CustomDropdown(
+                                  enableSearch: true,
+                                  value: _kabupatenController.text.isNotEmpty
+                                      ? _kabupatenController.text
+                                      : null,
+                                  selectedItems: city.data?.kabupaten?.map((
+                                    city,
+                                  ) {
+                                    return Text(
+                                      city,
+                                      style: const TextStyle(fontSize: 14),
+                                    );
+                                  }).toList(),
+                                  hintText: 'Pilih Kabupaten/Kota',
+                                  prefixIcon: const Icon(
+                                    Icons.location_city_outlined,
+
+                                    size: 20,
+                                  ),
+                                  items:
+                                      city.data?.kabupaten
+                                          ?.map(
+                                            (e) => DropdownMenuItem(
+                                              value: e,
+                                              child: Text(e),
+                                            ),
+                                          )
+                                          .toList() ??
+                                      [],
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _kabupatenController.text = value ?? '';
+                                    });
+                                  },
+                                );
+                              case ErrorCity():
+                                return CustomDropdown(
+                                  hintText: 'Pilih Kabupaten/Kota',
+                                  prefixIcon: const Icon(
+                                    Icons.location_city_outlined,
+
+                                    size: 20,
+                                  ),
+                                  items: [],
+                                  onChanged: (value) {},
+                                );
+                              default:
+                                return CustomDropdown(
+                                  hintText: 'Pilih Kabupaten/Kota',
+                                  prefixIcon: const Icon(
+                                    Icons.location_city_outlined,
+
+                                    size: 20,
+                                  ),
+                                  items: [],
+                                  onChanged: (value) {},
+                                );
+                            }
+                          },
+                        ),
+                        const SpaceHeight(16),
+
+                        // Provinsi
+                        CustomTextFormField(
+                          controller: _provinsiController,
+                          label: 'Provinsi',
+                          hintText: 'Masukkan provinsi',
+                          prefixIcon: const Icon(Icons.map_outlined, size: 20),
+                          isRequired: true,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Provinsi harus diisi';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SpaceHeight(16),
+
+                        // Kode Pos
+                        CustomTextFormField(
+                          controller: _kodePosController,
+                          label: 'Kode Pos',
+                          hintText: 'Masukkan kode pos',
+                          keyboardType: TextInputType.number,
+                          prefixIcon: const Icon(
+                            Icons.markunread_mailbox_outlined,
+                            size: 20,
+                          ),
+                          isRequired: true,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Kode pos harus diisi';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SpaceHeight(16),
+
+                        // Keterangan
+                        CustomTextFormField(
+                          controller: _keteranganController,
+                          label: 'Keterangan (Opsional)',
+                          hintText: 'Contoh: Rumah, Kantor, Kost',
+                          prefixIcon: const Icon(Icons.label_outline, size: 20),
+                        ),
+                        const SpaceHeight(20),
+
+                        // Checkbox Jadikan Alamat Utama
+                        Container(
+                          decoration: BoxDecoration(
+                            color: ColorsApp.white,
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: ColorsApp.borderColor.withAlpha(128),
+                              width: 1,
+                            ),
+                          ),
+                          child: CheckboxListTile(
+                            value: _isUtama == 1,
+                            onChanged: (value) {
+                              setState(() {
+                                _isUtama = value == true ? 1 : 0;
+                              });
+                            },
+                            title: const Text(
+                              'Jadikan alamat utama',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            subtitle: const Text(
+                              'Alamat ini akan menjadi pilihan default',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: ColorsApp.textSecondary,
+                              ),
+                            ),
+                            activeColor: ColorsApp.primary,
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 4,
+                            ),
+                            controlAffinity: ListTileControlAffinity.leading,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
 
-            Container(
-              margin: EdgeInsets.only(bottom: 10),
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: ColorsApp.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withAlpha(10),
-                    blurRadius: 8,
-                    offset: const Offset(0, -2),
-                  ),
-                ],
-              ),
-              child: BlocConsumer<SubmitProfileBloc, SubmitProfileState>(
-                listener: (context, state) {
-                  switch (state) {
-                    case AddShippingAddressSuccess(:final message):
-                      context.pop();
-                      context.showAlertSuccess(message: message);
-                      context.read<SectionBloc>().add(
-                        const SectionEvent.shippingAddress(),
+              Container(
+                margin: EdgeInsets.only(bottom: 10),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: ColorsApp.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withAlpha(10),
+                      blurRadius: 8,
+                      offset: const Offset(0, -2),
+                    ),
+                  ],
+                ),
+                child: BlocConsumer<SubmitProfileBloc, SubmitProfileState>(
+                  listener: (context, state) {
+                    switch (state) {
+                      case AddShippingAddressSuccess(:final message):
+                        context.pop();
+                        context.showAlertSuccess(message: message);
+                        context.read<SectionBloc>().add(
+                          const SectionEvent.shippingAddress(),
+                        );
+                      case UpdateShippingAddressSuccess(:final message):
+                        context.pop();
+                        context.showAlertSuccess(message: message);
+                        context.read<SectionBloc>().add(
+                          const SectionEvent.shippingAddress(),
+                        );
+                      case ErrorSubmitProfile(:final message):
+                        context.showAlertError(message: message);
+                      case _:
+                        break;
+                    }
+                  },
+                  builder: (context, state) {
+                    if (state is LoadingSubmitProfile) {
+                      return Button.filled(
+                        onPressed: () {},
+                        label: '',
+                        color: ColorsApp.primary,
+                        loading: true,
                       );
-                    case UpdateShippingAddressSuccess(:final message):
-                      context.pop();
-                      context.showAlertSuccess(message: message);
-                      context.read<SectionBloc>().add(
-                        const SectionEvent.shippingAddress(),
-                      );
-                    case ErrorSubmitProfile(:final message):
-                      context.showAlertError(message: message);
-                    case _:
-                      break;
-                  }
-                },
-                builder: (context, state) {
-                  if (state is LoadingSubmitProfile) {
+                    }
                     return Button.filled(
-                      onPressed: () {},
-                      label: '',
-                      color: ColorsApp.primary,
-                      loading: true,
-                    );
-                  }
-                  return Button.filled(
-                    onPressed: () {
-                      if (!_formKey.currentState!.validate()) {
-                        return;
-                      }
-                      final address = ShippingAddressRequestModel(
-                        id: widget.initialAddress?.id,
-                        namaPenerima: _namaPenerimaController.text,
-                        nomorTelepon: _nomorTeleponController.text,
-                        alamat: _alamatController.text,
-                        kabupaten: _kabupatenController.text,
-                        provinsi: _provinsiController.text,
-                        kodePos: _kodePosController.text,
-                        keterangan: _keteranganController.text,
-                        utama: _isUtama,
-                      );
+                      onPressed: () {
+                        if (!_formKey.currentState!.validate()) {
+                          return;
+                        }
+                        final address = ShippingAddressRequestModel(
+                          id: widget.initialAddress?.id,
+                          namaPenerima: _namaPenerimaController.text,
+                          nomorTelepon: _nomorTeleponController.text,
+                          alamat: _alamatController.text,
+                          kabupaten: _kabupatenController.text,
+                          provinsi: _provinsiController.text,
+                          kodePos: _kodePosController.text,
+                          keterangan: _keteranganController.text,
+                          utama: _isUtama,
+                        );
 
-                      if (widget.initialAddress != null) {
-                        context.read<SubmitProfileBloc>().add(
-                          SubmitProfileEvent.updateShippingAddress(address),
-                        );
-                      } else {
-                        context.read<SubmitProfileBloc>().add(
-                          SubmitProfileEvent.addShippingAddress(address),
-                        );
-                      }
-                    },
-                    label: widget.initialAddress != null
-                        ? 'Update Alamat'
-                        : 'Simpan Alamat',
-                    color: ColorsApp.primary,
-                  );
-                },
+                        if (widget.initialAddress != null) {
+                          context.read<SubmitProfileBloc>().add(
+                            SubmitProfileEvent.updateShippingAddress(address),
+                          );
+                        } else {
+                          context.read<SubmitProfileBloc>().add(
+                            SubmitProfileEvent.addShippingAddress(address),
+                          );
+                        }
+                      },
+                      label: widget.initialAddress != null
+                          ? 'Update Alamat'
+                          : 'Simpan Alamat',
+                      color: ColorsApp.primary,
+                    );
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

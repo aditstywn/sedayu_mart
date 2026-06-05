@@ -71,351 +71,358 @@ class _UpdateProfileState extends State<UpdateProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Edit Profil')),
-      body: Form(
-        key: _formKey,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: ColorsApp.white,
-                        borderRadius: BorderRadius.circular(10),
+      body: SafeArea(
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: ColorsApp.white,
+                          borderRadius: BorderRadius.circular(10),
 
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withAlpha(10),
-                            blurRadius: 8,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Foto Profil',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: ColorsApp.grey,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withAlpha(10),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
                             ),
-                          ),
-                          const SpaceHeight(12),
-                          Center(
-                            child: InkWell(
-                              onTap: _showImageSourceDialog,
-                              borderRadius: BorderRadius.circular(12),
-                              child: Container(
-                                width: double.infinity,
-                                height: 200,
-                                decoration: BoxDecoration(
-                                  color: ColorsApp.gray100,
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(
-                                    color: ColorsApp.gray300,
-                                    width: 2,
-                                    style: BorderStyle.solid,
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Foto Profil',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: ColorsApp.grey,
+                              ),
+                            ),
+                            const SpaceHeight(12),
+                            Center(
+                              child: InkWell(
+                                onTap: _showImageSourceDialog,
+                                borderRadius: BorderRadius.circular(12),
+                                child: Container(
+                                  width: double.infinity,
+                                  height: 200,
+                                  decoration: BoxDecoration(
+                                    color: ColorsApp.gray100,
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(
+                                      color: ColorsApp.gray300,
+                                      width: 2,
+                                      style: BorderStyle.solid,
+                                    ),
+                                  ),
+                                  child: _imageFile != null
+                                      ? ClipRRect(
+                                          borderRadius: BorderRadius.circular(
+                                            10,
+                                          ),
+                                          child: Image.file(
+                                            File(_imageFile!.path),
+                                            fit: BoxFit.cover,
+                                          ),
+                                        )
+                                      : _imageUrl != null
+                                      ? ClipRRect(
+                                          borderRadius: BorderRadius.circular(
+                                            10,
+                                          ),
+                                          child: Image.network(
+                                            '${Url.baseUrl}/$_imageUrl',
+                                            fit: BoxFit.cover,
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                                  return _buildPlaceholder();
+                                                },
+                                          ),
+                                        )
+                                      : _buildPlaceholder(),
+                                ),
+                              ),
+                            ),
+                            if (_imageFile != null || _imageUrl != null)
+                              const SpaceHeight(8),
+                            if (_imageFile != null || _imageUrl != null)
+                              Center(
+                                child: TextButton.icon(
+                                  onPressed: () {
+                                    setState(() {
+                                      _imageFile = null;
+                                      _imageUrl = null;
+                                    });
+                                  },
+                                  icon: const Icon(
+                                    CupertinoIcons.trash,
+                                    size: 16,
+                                    color: Colors.red,
+                                  ),
+                                  label: const Text(
+                                    'Hapus Gambar',
+                                    style: TextStyle(color: Colors.red),
                                   ),
                                 ),
-                                child: _imageFile != null
-                                    ? ClipRRect(
-                                        borderRadius: BorderRadius.circular(10),
-                                        child: Image.file(
-                                          File(_imageFile!.path),
-                                          fit: BoxFit.cover,
-                                        ),
-                                      )
-                                    : _imageUrl != null
-                                    ? ClipRRect(
-                                        borderRadius: BorderRadius.circular(10),
-                                        child: Image.network(
-                                          '${Url.baseUrl}/$_imageUrl',
-                                          fit: BoxFit.cover,
-                                          errorBuilder:
-                                              (context, error, stackTrace) {
-                                                return _buildPlaceholder();
-                                              },
-                                        ),
-                                      )
-                                    : _buildPlaceholder(),
                               ),
+                          ],
+                        ),
+                      ),
+                      const SpaceHeight(20),
+                      Container(
+                        padding: EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: ColorsApp.white,
+                          borderRadius: BorderRadius.circular(10),
+
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withAlpha(10),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
                             ),
-                          ),
-                          if (_imageFile != null || _imageUrl != null)
-                            const SpaceHeight(8),
-                          if (_imageFile != null || _imageUrl != null)
-                            Center(
-                              child: TextButton.icon(
-                                onPressed: () {
-                                  setState(() {
-                                    _imageFile = null;
-                                    _imageUrl = null;
-                                  });
-                                },
-                                icon: const Icon(
-                                  CupertinoIcons.trash,
-                                  size: 16,
-                                  color: Colors.red,
-                                ),
-                                label: const Text(
-                                  'Hapus Gambar',
-                                  style: TextStyle(color: Colors.red),
-                                ),
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Nama
+                            CustomTextFormField(
+                              controller: _nameController,
+                              label: 'Nama ',
+                              hintText: 'Masukkan nama ',
+                              prefixIcon: const Icon(
+                                Icons.person_outline,
+                                size: 20,
                               ),
+                              isRequired: true,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Nama  harus diisi';
+                                }
+                                return null;
+                              },
                             ),
-                        ],
-                      ),
-                    ),
-                    const SpaceHeight(20),
-                    Container(
-                      padding: EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: ColorsApp.white,
-                        borderRadius: BorderRadius.circular(10),
+                            const SpaceHeight(16),
 
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withAlpha(10),
-                            blurRadius: 8,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Nama
-                          CustomTextFormField(
-                            controller: _nameController,
-                            label: 'Nama ',
-                            hintText: 'Masukkan nama ',
-                            prefixIcon: const Icon(
-                              Icons.person_outline,
-                              size: 20,
+                            // Nomor Telepon
+                            CustomTextFormField(
+                              controller: _phoneController,
+                              label: 'Nomor Telepon',
+                              hintText: 'Masukkan nomor telepon',
+                              keyboardType: TextInputType.phone,
+                              prefixIcon: const Icon(
+                                Icons.phone_outlined,
+                                size: 20,
+                              ),
+                              isRequired: true,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Nomor telepon harus diisi';
+                                }
+                                if (value.length < 10) {
+                                  return 'Nomor telepon minimal 10 digit';
+                                }
+                                return null;
+                              },
                             ),
-                            isRequired: true,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Nama  harus diisi';
-                              }
-                              return null;
-                            },
-                          ),
-                          const SpaceHeight(16),
+                            const SpaceHeight(16),
 
-                          // Nomor Telepon
-                          CustomTextFormField(
-                            controller: _phoneController,
-                            label: 'Nomor Telepon',
-                            hintText: 'Masukkan nomor telepon',
-                            keyboardType: TextInputType.phone,
-                            prefixIcon: const Icon(
-                              Icons.phone_outlined,
-                              size: 20,
+                            // Alamat Lengkap
+                            CustomTextFormField(
+                              controller: _addressController,
+                              label: 'Alamat Lengkap',
+                              hintText: 'Masukkan alamat lengkap',
+                              maxLines: 3,
+                              keyboardType: TextInputType.multiline,
+                              prefixIcon: const Icon(
+                                Icons.location_on_outlined,
+                                size: 20,
+                              ),
+                              isRequired: true,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Alamat harus diisi';
+                                }
+                                return null;
+                              },
                             ),
-                            isRequired: true,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Nomor telepon harus diisi';
-                              }
-                              if (value.length < 10) {
-                                return 'Nomor telepon minimal 10 digit';
-                              }
-                              return null;
-                            },
-                          ),
-                          const SpaceHeight(16),
+                            const SpaceHeight(16),
 
-                          // Alamat Lengkap
-                          CustomTextFormField(
-                            controller: _addressController,
-                            label: 'Alamat Lengkap',
-                            hintText: 'Masukkan alamat lengkap',
-                            maxLines: 3,
-                            keyboardType: TextInputType.multiline,
-                            prefixIcon: const Icon(
-                              Icons.location_on_outlined,
-                              size: 20,
-                            ),
-                            isRequired: true,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Alamat harus diisi';
-                              }
-                              return null;
-                            },
-                          ),
-                          const SpaceHeight(16),
+                            // Kabupaten
+                            // CustomTextFormField(
+                            //   controller: _citylController,
+                            //   label: 'Kabupaten/Kota',
+                            //   hintText: 'Masukkan kabupaten/kota',
+                            //   prefixIcon: const Icon(
+                            //     Icons.location_city_outlined,
+                            //     size: 20,
+                            //   ),
+                            //   isRequired: true,
+                            //   validator: (value) {
+                            //     if (value == null || value.isEmpty) {
+                            //       return 'Kabupaten/Kota harus diisi';
+                            //     }
+                            //     return null;
+                            //   },
+                            // ),
+                            BlocBuilder<CityBloc, CityState>(
+                              builder: (context, state) {
+                                switch (state) {
+                                  case LoadingCity():
+                                    return CustomDropdown(
+                                      hintText: 'Pilih Kabupaten/Kota',
+                                      prefixIcon: const Icon(
+                                        Icons.location_city_outlined,
 
-                          // Kabupaten
-                          // CustomTextFormField(
-                          //   controller: _citylController,
-                          //   label: 'Kabupaten/Kota',
-                          //   hintText: 'Masukkan kabupaten/kota',
-                          //   prefixIcon: const Icon(
-                          //     Icons.location_city_outlined,
-                          //     size: 20,
-                          //   ),
-                          //   isRequired: true,
-                          //   validator: (value) {
-                          //     if (value == null || value.isEmpty) {
-                          //       return 'Kabupaten/Kota harus diisi';
-                          //     }
-                          //     return null;
-                          //   },
-                          // ),
-                          BlocBuilder<CityBloc, CityState>(
-                            builder: (context, state) {
-                              switch (state) {
-                                case LoadingCity():
-                                  return CustomDropdown(
-                                    hintText: 'Pilih Kabupaten/Kota',
-                                    prefixIcon: const Icon(
-                                      Icons.location_city_outlined,
-
-                                      size: 20,
-                                    ),
-                                    items: [],
-                                    onChanged: (value) {},
-                                  );
-                                case CitySuccess(:final city):
-                                  return CustomDropdown(
-                                    enableSearch: true,
-                                    value: _citylController.text.isNotEmpty
-                                        ? _citylController.text
-                                        : null,
-                                    selectedItems: city.data?.kabupaten?.map((
-                                      city,
-                                    ) {
-                                      return Text(
+                                        size: 20,
+                                      ),
+                                      items: [],
+                                      onChanged: (value) {},
+                                    );
+                                  case CitySuccess(:final city):
+                                    return CustomDropdown(
+                                      enableSearch: true,
+                                      value: _citylController.text.isNotEmpty
+                                          ? _citylController.text
+                                          : null,
+                                      selectedItems: city.data?.kabupaten?.map((
                                         city,
-                                        style: const TextStyle(fontSize: 14),
-                                      );
-                                    }).toList(),
-                                    hintText: 'Pilih Kabupaten/Kota',
-                                    prefixIcon: const Icon(
-                                      Icons.location_city_outlined,
+                                      ) {
+                                        return Text(
+                                          city,
+                                          style: const TextStyle(fontSize: 14),
+                                        );
+                                      }).toList(),
+                                      hintText: 'Pilih Kabupaten/Kota',
+                                      prefixIcon: const Icon(
+                                        Icons.location_city_outlined,
 
-                                      size: 20,
-                                    ),
-                                    items:
-                                        city.data?.kabupaten
-                                            ?.map(
-                                              (e) => DropdownMenuItem(
-                                                value: e,
-                                                child: Text(e),
-                                              ),
-                                            )
-                                            .toList() ??
-                                        [],
-                                    onChanged: (value) {
-                                      setState(() {
-                                        _citylController.text = value ?? '';
-                                      });
-                                    },
-                                  );
-                                case ErrorCity():
-                                  return CustomDropdown(
-                                    hintText: 'Pilih Kabupaten/Kota',
-                                    prefixIcon: const Icon(
-                                      Icons.location_city_outlined,
+                                        size: 20,
+                                      ),
+                                      items:
+                                          city.data?.kabupaten
+                                              ?.map(
+                                                (e) => DropdownMenuItem(
+                                                  value: e,
+                                                  child: Text(e),
+                                                ),
+                                              )
+                                              .toList() ??
+                                          [],
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _citylController.text = value ?? '';
+                                        });
+                                      },
+                                    );
+                                  case ErrorCity():
+                                    return CustomDropdown(
+                                      hintText: 'Pilih Kabupaten/Kota',
+                                      prefixIcon: const Icon(
+                                        Icons.location_city_outlined,
 
-                                      size: 20,
-                                    ),
-                                    items: [],
-                                    onChanged: (value) {},
-                                  );
-                                default:
-                                  return CustomDropdown(
-                                    hintText: 'Pilih Kabupaten/Kota',
-                                    prefixIcon: const Icon(
-                                      Icons.location_city_outlined,
+                                        size: 20,
+                                      ),
+                                      items: [],
+                                      onChanged: (value) {},
+                                    );
+                                  default:
+                                    return CustomDropdown(
+                                      hintText: 'Pilih Kabupaten/Kota',
+                                      prefixIcon: const Icon(
+                                        Icons.location_city_outlined,
 
-                                      size: 20,
-                                    ),
-                                    items: [],
-                                    onChanged: (value) {},
-                                  );
-                              }
-                            },
-                          ),
-                        ],
+                                        size: 20,
+                                      ),
+                                      items: [],
+                                      onChanged: (value) {},
+                                    );
+                                }
+                              },
+                            ),
+                          ],
+                        ),
                       ),
+                    ],
+                  ),
+                ),
+              ),
+
+              Container(
+                margin: EdgeInsets.only(bottom: 10),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: ColorsApp.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withAlpha(10),
+                      blurRadius: 8,
+                      offset: const Offset(0, -2),
                     ),
                   ],
                 ),
-              ),
-            ),
+                child: BlocConsumer<SubmitProfileBloc, SubmitProfileState>(
+                  listener: (context, state) {
+                    switch (state) {
+                      case UpdateProfileSuccess(:final data):
+                        context.showAlertSuccess(
+                          message:
+                              data.message ?? 'Berhasil memperbarui profil',
+                        );
 
-            Container(
-              margin: EdgeInsets.only(bottom: 10),
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: ColorsApp.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withAlpha(10),
-                    blurRadius: 8,
-                    offset: const Offset(0, -2),
-                  ),
-                ],
-              ),
-              child: BlocConsumer<SubmitProfileBloc, SubmitProfileState>(
-                listener: (context, state) {
-                  switch (state) {
-                    case UpdateProfileSuccess(:final data):
-                      context.showAlertSuccess(
-                        message: data.message ?? 'Berhasil memperbarui profil',
+                        Navigator.pop(context, true);
+                        context.read<ProfileBloc>().add(
+                          const ProfileEvent.profile(),
+                        );
+                      case ErrorSubmitProfile(:final message):
+                        context.showAlertError(message: message);
+                      default:
+                        break;
+                    }
+                  },
+                  builder: (context, state) {
+                    if (state is LoadingSubmitProfile) {
+                      return Button.filled(
+                        onPressed: () {},
+                        label: '',
+                        color: ColorsApp.primary,
+                        loading: true,
                       );
-
-                      Navigator.pop(context, true);
-                      context.read<ProfileBloc>().add(
-                        const ProfileEvent.profile(),
-                      );
-                    case ErrorSubmitProfile(:final message):
-                      context.showAlertError(message: message);
-                    default:
-                      break;
-                  }
-                },
-                builder: (context, state) {
-                  if (state is LoadingSubmitProfile) {
+                    }
                     return Button.filled(
-                      onPressed: () {},
-                      label: '',
-                      color: ColorsApp.primary,
-                      loading: true,
-                    );
-                  }
-                  return Button.filled(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        final profile = ProfileRequestModel(
-                          nama: _nameController.text,
-                          alamat: _addressController.text,
-                          kabupaten: _citylController.text,
-                          nomorTelepon: _phoneController.text,
-                          image: _imageFile,
-                        );
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          final profile = ProfileRequestModel(
+                            nama: _nameController.text,
+                            alamat: _addressController.text,
+                            kabupaten: _citylController.text,
+                            nomorTelepon: _phoneController.text,
+                            image: _imageFile,
+                          );
 
-                        context.read<SubmitProfileBloc>().add(
-                          SubmitProfileEvent.updateProfile(profile),
-                        );
-                      }
-                    },
-                    label: 'Simpan',
-                    color: ColorsApp.primary,
-                  );
-                },
+                          context.read<SubmitProfileBloc>().add(
+                            SubmitProfileEvent.updateProfile(profile),
+                          );
+                        }
+                      },
+                      label: 'Simpan',
+                      color: ColorsApp.primary,
+                    );
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

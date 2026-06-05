@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smart_agro/core/component/space.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/component/buttons.dart';
 import '../../../../core/config/url.dart';
 import '../../../../core/style/color/colors_app.dart';
@@ -22,6 +23,7 @@ class DetailOrderPage extends StatefulWidget {
 
 class _DetailOrderPageState extends State<DetailOrderPage> {
   String? status;
+  String? hubungiPenjual;
   @override
   void initState() {
     super.initState();
@@ -34,88 +36,99 @@ class _DetailOrderPageState extends State<DetailOrderPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Detail Pesanan')),
-      body: BlocConsumer<DetailOrderBloc, DetailOrderState>(
-        listener: (context, state) {
-          switch (state) {
-            case DetailOrderSuccess(:final detail):
-              setState(() {
-                status = detail.data?.status;
-              });
-            case _:
-          }
-        },
-        builder: (context, state) {
-          switch (state) {
-            case LoadingDetailOrder():
-              return const DetailOrderLoading();
+      body: SafeArea(
+        child: BlocConsumer<DetailOrderBloc, DetailOrderState>(
+          listener: (context, state) {
+            switch (state) {
+              case DetailOrderSuccess(:final detail):
+                setState(() {
+                  status = detail.data?.status;
+                  hubungiPenjual = detail.data?.hubungiPenjual;
+                });
+              case _:
+            }
+          },
+          builder: (context, state) {
+            switch (state) {
+              case LoadingDetailOrder():
+                return const DetailOrderLoading();
 
-            case ErrorDetailOrder(:final message):
-              return Center(child: Text('Error: $message'));
-            case DetailOrderSuccess(:final detail):
-              return RefreshIndicator(
-                onRefresh: () async {
-                  context.read<DetailOrderBloc>().add(
-                    DetailOrderEvent.detailOrder(widget.orderId ?? 0),
-                  );
-                },
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SpaceHeight(18),
+              case ErrorDetailOrder(:final message):
+                return Center(child: Text('Error: $message'));
+              case DetailOrderSuccess(:final detail):
+                return RefreshIndicator(
+                  onRefresh: () async {
+                    context.read<DetailOrderBloc>().add(
+                      DetailOrderEvent.detailOrder(widget.orderId ?? 0),
+                    );
+                  },
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SpaceHeight(18),
 
-                      _buildStatusHeader(status: detail.data?.status),
+                        _buildStatusHeader(status: detail.data?.status),
 
-                      const SizedBox(height: 12),
-
-                      _buildOrderInfo(
-                        orderNumber: detail.data?.nomorPesanan,
-                        date: detail.data?.pesananDibuatPada,
-                      ),
-
-                      const SizedBox(height: 12),
-
-                      if (detail.data?.status == 'Dikirim' ||
-                          detail.data?.status == 'Selesai')
-                        _buildShippingInfo(),
-
-                      if (detail.data?.status == 'Dikirim' ||
-                          detail.data?.status == 'Selesai')
                         const SizedBox(height: 12),
 
-                      _buildRecipientInfo(recipient: detail.data?.dataPenerima),
+                        _buildOrderInfo(
+                          orderNumber: detail.data?.nomorPesanan,
+                          date: detail.data?.pesananDibuatPada,
+                        ),
 
-                      const SizedBox(height: 12),
+                        const SizedBox(height: 12),
 
-                      _buildProductList(items: detail.data?.items),
+                        if (detail.data?.status == 'Dikirim' ||
+                            detail.data?.status == 'Selesai')
+                          _buildShippingInfo(detail.data?.informasiPengiriman),
 
-                      const SizedBox(height: 12),
+                        if (detail.data?.status == 'Dikirim' ||
+                            detail.data?.status == 'Selesai')
+                          const SizedBox(height: 12),
 
-                      _buildPaymentSummary(
-                        subtotal: detail.data?.subtotalProduk,
-                        shipping: detail.data?.ongkir,
-                        total: detail.data?.totalBayar,
-                      ),
-                      SpaceHeight(12),
-                      _buildNotes(notes: detail.data?.catatan),
+                        _buildRecipientInfo(
+                          recipient: detail.data?.dataPenerima,
+                        ),
 
-                      const SizedBox(height: 12),
+                        const SizedBox(height: 12),
 
-                      _buildPaymentProof(
-                        imageUrl: detail.data?.buktiPembayaran,
-                      ),
+                        _buildProductList(items: detail.data?.items),
 
-                      const SizedBox(height: 24),
-                    ],
+                        const SizedBox(height: 12),
+
+                        _buildPaymentSummary(
+                          subtotal: detail.data?.subtotalProduk,
+                          shipping: detail.data?.ongkir,
+                          total: detail.data?.totalBayar,
+                        ),
+                        SpaceHeight(12),
+                        _buildNotes(notes: detail.data?.catatan),
+
+                        const SizedBox(height: 12),
+
+                        _buildPaymentProof(
+                          imageUrl: detail.data?.buktiPembayaran,
+                        ),
+
+                        const SizedBox(height: 24),
+                      ],
+                    ),
                   ),
-                ),
-              );
-            case _:
-              return SizedBox();
-          }
-        },
+                );
+              case _:
+                return SizedBox();
+            }
+          },
+        ),
       ),
-      bottomNavigationBar: _buildBottomBar(context, status: status),
+      bottomNavigationBar: SafeArea(
+        child: _buildBottomBar(
+          context,
+          status: status,
+          hubungiPenjual: hubungiPenjual,
+        ),
+      ),
     );
   }
 
@@ -333,7 +346,7 @@ class _DetailOrderPageState extends State<DetailOrderPage> {
     );
   }
 
-  Widget _buildShippingInfo() {
+  Widget _buildShippingInfo(InformasiPengiriman? infoPengiriman) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
@@ -394,7 +407,7 @@ class _DetailOrderPageState extends State<DetailOrderPage> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'JNE123456789012',
+                        infoPengiriman?.nomorPengiriman ?? '-',
                         style: SedayuTextStyles.bodyLargeBold.copyWith(
                           color: ColorsApp.primary,
                           fontWeight: FontWeight.bold,
@@ -419,9 +432,15 @@ class _DetailOrderPageState extends State<DetailOrderPage> {
             ),
           ),
           const SizedBox(height: 16),
-          _buildInfoRow('Kurir', 'JNE REG'),
+          _buildInfoRow('Kurir', infoPengiriman?.namaEkspedisi ?? '-'),
           const SizedBox(height: 12),
-          _buildInfoRow('Estimasi Tiba', '25 - 27 Des 2025'),
+          _buildInfoRow(
+            'Estimasi Tiba',
+            infoPengiriman?.estimasiTibaMulai != null &&
+                    infoPengiriman?.estimasiTibaSelesai != null
+                ? '${DateFormat('dd MMM').format(DateTime.parse(infoPengiriman!.estimasiTibaMulai!))} - ${DateFormat('dd MMM yyyy').format(DateTime.parse(infoPengiriman.estimasiTibaSelesai!))}'
+                : '-',
+          ),
         ],
       ),
     );
@@ -865,7 +884,11 @@ class _DetailOrderPageState extends State<DetailOrderPage> {
     );
   }
 
-  Widget _buildBottomBar(BuildContext context, {String? status}) {
+  Widget _buildBottomBar(
+    BuildContext context, {
+    String? status,
+    String? hubungiPenjual,
+  }) {
     if (status == 'Dibatalkan' || status == 'Selesai') {
       return Container(
         padding: const EdgeInsets.all(20),
@@ -901,7 +924,12 @@ class _DetailOrderPageState extends State<DetailOrderPage> {
       child: Row(
         children: [
           Expanded(
-            child: Button.outlined(onPressed: () {}, label: 'Hubungi Penjual'),
+            child: Button.outlined(
+              onPressed: () {
+                launchUrl(Uri.parse(hubungiPenjual ?? ''));
+              },
+              label: 'Hubungi Penjual',
+            ),
           ),
           if (status == 'Dikirim') ...[
             const SizedBox(width: 12),

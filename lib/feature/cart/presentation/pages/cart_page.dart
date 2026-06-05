@@ -60,75 +60,78 @@ class _CartPageState extends State<CartPage> {
             case _:
           }
         },
-        child: BlocBuilder<CartBloc, CartState>(
-          builder: (context, state) {
-            switch (state) {
-              case LoadingCart():
-                return const CartShimmer();
-              case CartError(:final message):
-                return Center(
-                  child: Text(
-                    message,
-                    style: SedayuTextStyles.bodyLargeMedium.copyWith(
-                      color: ColorsApp.error,
-                    ),
-                  ),
-                );
-              case GetCartSuccess(:final cart):
-                if (cart.data?.isEmpty == true) {
-                  return _buildEmptyCart();
-                } else if (_deletedItemIds.length == (cart.data?.length ?? 0)) {
-                  return _buildEmptyCart();
-                }
-
-                // Group produk berdasarkan product ID
-                final groupedProducts = <int, List<DataProduk>>{};
-                for (var item in cart.data ?? []) {
-                  // Skip item yang sudah dihapus
-                  if (_deletedItemIds.contains(item.id)) {
-                    continue;
-                  }
-
-                  final productId = item.produk?.id ?? 0;
-                  if (!groupedProducts.containsKey(productId)) {
-                    groupedProducts[productId] = [];
-                  }
-                  groupedProducts[productId]!.add(item);
-                }
-
-                return Column(
-                  children: [
-                    Expanded(
-                      child: RefreshIndicator(
-                        onRefresh: () async {
-                          context.read<CartBloc>().add(
-                            const CartEvent.getCart(),
-                          );
-                        },
-                        child: ListView.builder(
-                          padding: const EdgeInsets.all(16),
-                          itemCount: groupedProducts.length,
-                          itemBuilder: (context, index) {
-                            final productId = groupedProducts.keys.elementAt(
-                              index,
-                            );
-                            final items = groupedProducts[productId]!;
-                            return _buildGroupedCartItem(
-                              context,
-                              productId: productId,
-                              items: items,
-                            );
-                          },
-                        ),
+        child: SafeArea(
+          child: BlocBuilder<CartBloc, CartState>(
+            builder: (context, state) {
+              switch (state) {
+                case LoadingCart():
+                  return const CartShimmer();
+                case CartError(:final message):
+                  return Center(
+                    child: Text(
+                      message,
+                      style: SedayuTextStyles.bodyLargeMedium.copyWith(
+                        color: ColorsApp.error,
                       ),
                     ),
-                    _buildSummary(context, cart),
-                  ],
-                );
-              case _:
-                return SizedBox();
-            }
-          },
+                  );
+                case GetCartSuccess(:final cart):
+                  if (cart.data?.isEmpty == true) {
+                    return _buildEmptyCart();
+                  } else if (_deletedItemIds.length ==
+                      (cart.data?.length ?? 0)) {
+                    return _buildEmptyCart();
+                  }
+
+                  // Group produk berdasarkan product ID
+                  final groupedProducts = <int, List<DataProduk>>{};
+                  for (var item in cart.data ?? []) {
+                    // Skip item yang sudah dihapus
+                    if (_deletedItemIds.contains(item.id)) {
+                      continue;
+                    }
+
+                    final productId = item.produk?.id ?? 0;
+                    if (!groupedProducts.containsKey(productId)) {
+                      groupedProducts[productId] = [];
+                    }
+                    groupedProducts[productId]!.add(item);
+                  }
+
+                  return Column(
+                    children: [
+                      Expanded(
+                        child: RefreshIndicator(
+                          onRefresh: () async {
+                            context.read<CartBloc>().add(
+                              const CartEvent.getCart(),
+                            );
+                          },
+                          child: ListView.builder(
+                            padding: const EdgeInsets.all(16),
+                            itemCount: groupedProducts.length,
+                            itemBuilder: (context, index) {
+                              final productId = groupedProducts.keys.elementAt(
+                                index,
+                              );
+                              final items = groupedProducts[productId]!;
+                              return _buildGroupedCartItem(
+                                context,
+                                productId: productId,
+                                items: items,
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                      _buildSummary(context, cart),
+                    ],
+                  );
+                case _:
+                  return SizedBox();
+              }
+            },
+          ),
         ),
       ),
     );
